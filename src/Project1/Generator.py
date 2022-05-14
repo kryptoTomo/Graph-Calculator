@@ -1,5 +1,5 @@
 import random 
-from Representation import AdjacencyList
+from Project1.Representation import AdjacencyList
 
 class Generator:
     @staticmethod

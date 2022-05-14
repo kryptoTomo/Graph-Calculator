@@ -24,18 +24,18 @@ data1={'name': 'Ad1.png',
 data2={'name': 'Ad1.png',
        'directed': True,
        'colors': [],
-       'graph':{ 1:  [2,5,6],
-                 2:  [1,3,6],
-                 3:  [2,4,5,12],
-                 4:  [3,8,9,11],
-                 5:  [1,3,7,9],
-                 6:  [1,2,7],
-                 7:  [5,6,8],
-                 8:  [4,7,9,12],
-                 9:  [4,5,8,10],
-                 10: [9],
-                 11: [4],
-                 12: [3,8]}
+       'graph':[[1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+[1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+[0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+[0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0],
+[0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0],
+[0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0],
+[0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0],
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1],
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+[0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0]]
 }
 
 ####################AdjacencyList####################
@@ -61,8 +61,11 @@ class AdjacencyList:
     def printGraph(self):
         print('Adjacency List ', end='\n\n')
 
+        returnStr=""
         for i,j in self.graph.items():
+            returnStr+=str((str(i)+': ').ljust(5)  + str(j))+"\n"
             print( (str(i)+': ').ljust(5)  + str(j) )
+        return returnStr
 
     def graphVisualization(self):
         g = Graph(self.edges)
@@ -73,11 +76,11 @@ class AdjacencyList:
         visual_style = {}
         visual_style["vertex_size"] = 20
         visual_style["layout"] = layout
-        visual_style["bbox"] = (800, 800)
+        visual_style["bbox"] = (250, 250)
         visual_style["margin"] = 20
-
-        out=plot(g, **visual_style)
-        out.save(self.name)
+        plot(g, **visual_style,target=f'src/__imgcache__/{self.name}')
+        # out=plot(g, **visual_style)
+        # out.save(self.name)
     def toAdjacencyList(self):
         return self
     def toAdjacencyMatrix(self):
@@ -130,8 +133,11 @@ class AdjacencyMatrix:
     def printGraph(self):
         print('Adjacency Matrix ', end='\n\n')
 
+        returnStr=""
         for i in self.graph:
+            returnStr+=str(i)+"\n"
             print(i)
+        return returnStr
 
     def graphVisualization(self):
         g = Graph(self.edges)
@@ -142,11 +148,13 @@ class AdjacencyMatrix:
         visual_style = {}
         visual_style["vertex_size"] = 20
         visual_style["layout"] = layout
-        visual_style["bbox"] = (800, 800)
+        visual_style["bbox"] = (250, 250)
         visual_style["margin"] = 20
 
-        out=plot(g, **visual_style)
-        out.save(self.name)
+        plot(g, **visual_style,target=f'src/__imgcache__/{self.name}')
+        # out=plot(g, **visual_style)
+        # out.save(self.name)
+
     def toAdjacencyList(self):
         data={}
         data['name']=copy.deepcopy(self.name)
@@ -202,10 +210,12 @@ class IncidentMatrix:
             self.edges.append(tuple(edge))
 
     def printGraph(self):
-        print('Adjacency Matrix ', end='\n\n')
-
+        print('IncidentMatrix', end='\n\n')
+        returnStr=""
         for i in self.graph:
+            returnStr+=str(i)+"\n"
             print(i)
+        return returnStr
 
     def graphVisualization(self):
         g = Graph(self.edges)
@@ -216,11 +226,11 @@ class IncidentMatrix:
         visual_style = {}
         visual_style["vertex_size"] = 20
         visual_style["layout"] = layout
-        visual_style["bbox"] = (800, 800)
+        visual_style["bbox"] = (250, 250)
         visual_style["margin"] = 20
-
-        out=plot(g, **visual_style)
-        out.save(self.name)
+        plot(g, **visual_style,target=f'src/__imgcache__/{self.name}')
+        # out=plot(g, **visual_style)
+        # out.save(self.name)
     def toAdjacencyList(self):
         data={}
         data['name']=copy.deepcopy(self.name)
@@ -239,8 +249,10 @@ class IncidentMatrix:
         data['graph']=copy.deepcopy(graph)
 
         return AdjacencyList(data)
+
     def toAdjacencyMatrix(self):
         return self
+
     def toIncidentMatrix(self):
         data={}
         data['name']=self.name
@@ -258,8 +270,3 @@ class IncidentMatrix:
         return IncidentMatrix(data)
 
 
-# a=AdjacencyList(data1)
-# a.toAdjacencyMatrix().toAdjacencyList().graphVisualization()
-# a.toAdjacencyMatrix().toIncidentMatrix().graphVisualization()
-# a.toIncidentMatrix().toAdjacencyList().graphVisualization()
-# a.toIncidentMatrix().toAdjacencyMatrix().graphVisualization()
