@@ -43,7 +43,10 @@ class GraphRepresentation:
         self.edges=[]
 
     def graphVisualization(self):
-        g = Graph(self.edges)
+        g = Graph()
+
+        g.add_vertices(list(range(1,len(self.graph)+1)))
+        g.add_edges(self.edges)
 
         g.vs["label"] = list(range(1,len(self.graph)+1))
         layout = g.layout_circle()
@@ -51,7 +54,7 @@ class GraphRepresentation:
         visual_style = {}
         visual_style["vertex_size"] = 20
         visual_style["layout"] = layout
-        visual_style["bbox"] = (250, 250)
+        visual_style["bbox"] = (800, 800)
         visual_style["margin"] = 20
 
         plot(g, **visual_style,target=f'src/__imgcache__/{self.name}')
