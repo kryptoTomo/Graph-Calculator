@@ -1,42 +1,10 @@
 from igraph import *
 import copy
 
-data1={'name': 'Ad1.png',
-       'directed': True,
-       'colors': [],
-       'graph':{ 'a':  ['b','e','f'],
-                 'b':  ['a','c','f'],
-                 'c':  ['b','d','e','l'],
-                 'd':  ['c','h','i','k'],
-                 'e':  ['a','c','g','i'],
-                 'f':  ['a','b','g'],
-                 'g':  ['e','f','h'],
-                 'h':  ['d','g','i','l'],
-                 'i':  ['d','e','h','j'],
-                 'j':  ['i'],
-                 'k':  ['d'],
-                 'l':  ['c','h']}
-}
-
-data2={'name': 'Ad1.png',
-       'directed': True,
-       'colors': [],
-       'graph':{ 1:  [2,5,6],
-                 2:  [1,3,6],
-                 3:  [2,4,5,12],
-                 4:  [3,8,9,11],
-                 5:  [1,3,7,9],
-                 6:  [1,2,7],
-                 7:  [5,6,8],
-                 8:  [4,7,9,12],
-                 9:  [4,5,8,10],
-                 10: [9],
-                 11: [4],
-                 12: [3,8]}
-}
 class GraphRepresentation:
     def __init__(self, data):
         self.name=data['name']
+        self.size=data['size']
         self.directed=data['directed']
         self.colors=data['colors']
         self.graph=data['graph']
@@ -54,16 +22,15 @@ class GraphRepresentation:
         visual_style = {}
         visual_style["vertex_size"] = 20
         visual_style["layout"] = layout
-        visual_style["bbox"] = (800, 800)
+        visual_style["bbox"] = self.size
         visual_style["margin"] = 20
 
         plot(g, **visual_style,target=f'src/__imgcache__/{self.name}')
-        # out=plot(g, **visual_style)
-        # out.save(self.name)
 
     def toAdjacencyList(self):
         data={}
         data['name']=copy.deepcopy(self.name)
+        data['size']=copy.deepcopy(self.size)
         data['directed']=copy.deepcopy(self.directed)
         data['colors']=copy.deepcopy(self.colors)
 
@@ -83,6 +50,7 @@ class GraphRepresentation:
     def toAdjacencyMatrix(self):
         data={}
         data['name']=copy.deepcopy(self.name)
+        data['size']=copy.deepcopy(self.size)
         data['directed']=copy.deepcopy(self.directed)
         data['colors']=copy.deepcopy(self.colors)
 
@@ -98,6 +66,7 @@ class GraphRepresentation:
     def toIncidentMatrix(self):
         data={}
         data['name']=copy.deepcopy(self.name)
+        data['size']=copy.deepcopy(self.size)
         data['directed']=copy.deepcopy(self.directed)
         data['colors']=copy.deepcopy(self.colors)
 
@@ -127,12 +96,12 @@ class AdjacencyList (GraphRepresentation):
                 self.edges.extend( [ (self.normalization[edge[0]],self.normalization[x]) for x in edge[1]] )
 
     def printGraph(self):
-        print('Adjacency List ', end='\n\n')
+        # print('Adjacency List ', end='\n\n')
 
         returnStr=""
         for i,j in self.graph.items():
             returnStr+=str((str(i)+': ').ljust(5)  + str(j))+"\n"
-            print( (str(i)+': ').ljust(5)  + str(j) )
+            # print( (str(i)+': ').ljust(5)  + str(j) )
         return returnStr
 
     def toAdjacencyList(self):
@@ -154,12 +123,12 @@ class AdjacencyMatrix (GraphRepresentation):
                     self.edges.append( (i,j) )
 
     def printGraph(self):
-        print('Adjacency Matrix ', end='\n\n')
+        # print('Adjacency Matrix ', end='\n\n')
 
         returnStr=""
         for i in self.graph:
             returnStr+=str(i)+"\n"
-            print(i)
+            # print(i)
         return returnStr
 
     def toAdjacencyList(self):
@@ -183,12 +152,12 @@ class IncidentMatrix (GraphRepresentation):
             self.edges.append(tuple(edge))
 
     def printGraph(self):
-        print('Adjacency Matrix ', end='\n\n')
+        # print('Adjacency Matrix ', end='\n\n')
 
         returnStr=""
         for i in self.graph:
             returnStr+=str(i)+"\n"
-            print(i)
+            # print(i)
         return returnStr
 
     def toAdjacencyList(self):

@@ -7,16 +7,13 @@ import ast
 
 from Generator import *
 from Representation import AdjacencyMatrix, IncidentMatrix
-from Randomize import randomizeGraph
-from Utils import components, valid_graph, cons_graph, random_k_regular, find_Hamiltion_cycle
+from Utils import components, valid_graph, cons_graph, random_k_regular, find_Hamiltion_cycle, randomizeGraph
 from EulerGraph import EulerGraph
 
 graph_representation_list = ['Select Graph Representation','AdjacencyList','AdjacencyMatrix','IncidentMatrix']
-data={'name': 'tmpImg.png',
-       'directed': True,
-       'colors': [],
-       'graph': None
-}
+
+data={'name': 'Representation.png','size': (250, 250),'directed': True,'colors': [],'graph': None}
+
 class MainWindow(QDialog):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
@@ -191,7 +188,7 @@ class MainWindow(QDialog):
         self.clear_right_layout()
         Generator.rand_graph_edge_number(self.rand_graph_edge_number_spin1_n.value(), self.rand_graph_edge_number_spin1_l.value()).graphVisualization()
         label = QLabel(self)
-        pixmap = QPixmap('src/__imgcache__/Ad3 (1).png')
+        pixmap = QPixmap('src/__imgcache__/randomGraphEdgeNumber.png')
         label.setPixmap(pixmap)
         self.layoutRightGroupBox.addWidget(label)
 
@@ -199,7 +196,7 @@ class MainWindow(QDialog):
         self.clear_right_layout()
         Generator.rand_graph_edge_probability(self.rand_graph_edge_number_spin2_n.value(), self.rand_graph_edge_number_spin2_p.value()).graphVisualization()
         label = QLabel(self)
-        pixmap = QPixmap('src/__imgcache__/Ad3 (2).png')
+        pixmap = QPixmap('src/__imgcache__/randGraphEdgeProbability.png')
         label.setPixmap(pixmap)
         self.layoutRightGroupBox.addWidget(label)
 
@@ -272,7 +269,6 @@ class MainWindow(QDialog):
         if self.graph_representation_combo.currentText() == graph_representation_list[2]: tmp = AdjacencyMatrix(data)
         if self.graph_representation_combo.currentText() == graph_representation_list[3]: 
             tmp = IncidentMatrix(data)
-            print("incyden1t")
         self.graph_representation_helper(tmp)
 
     def graph_representation_helper(self,tmp):
@@ -283,11 +279,10 @@ class MainWindow(QDialog):
             self.returnTextEdit.setText(tmp.toAdjacencyMatrix().printGraph())
             tmp.toAdjacencyMatrix().graphVisualization()
         if self.representationBox.currentText() == graph_representation_list[3]: 
-            print("incydent")
             self.returnTextEdit.setText(tmp.toIncidentMatrix().printGraph())
             tmp.toIncidentMatrix().graphVisualization()
 
-        pixmap = QPixmap('src/__imgcache__/tmpImg.png')
+        pixmap = QPixmap('src/__imgcache__/Representation.png')
         self.labelImage.setPixmap(pixmap)
 
 #+-----------------------------------------------------------------------------------------------------------------
@@ -349,7 +344,7 @@ class MainWindow(QDialog):
         if valid_graph(ast.literal_eval(self.inputTextEdit.toPlainText())):
             self.labelImage4.setText("The graph is graphical")
             cons_graph(ast.literal_eval(self.inputTextEdit.toPlainText())).graphVisualization()  #ex1
-            pixmap = QPixmap('src/__imgcache__/Ad1.png')
+            pixmap = QPixmap('src/__imgcache__/CoherentComponent.png')
             self.labelImage1.setPixmap(pixmap)
             tmpStr = components(cons_graph(ast.literal_eval(self.inputTextEdit.toPlainText())).graph)     #ex3
             self.labelImage3.setText(tmpStr)
@@ -397,10 +392,10 @@ class MainWindow(QDialog):
         data['graph']=ast.literal_eval(self.inputTextEdit.toPlainText())
         tmp = AdjacencyList(data)
         tmp.graphVisualization()
-        pixmap = QPixmap('src/__imgcache__/tmpImg.png')
+        pixmap = QPixmap('src/__imgcache__/Representation.png')
         self.labelImage1.setPixmap(pixmap)
         randomizeGraph(tmp,self.spin.value()).graphVisualization()
-        pixmap = QPixmap('src/__imgcache__/Ad.png')
+        pixmap = QPixmap('src/__imgcache__/RandomizeGraph.png')
         self.labelImage3.setPixmap(pixmap)
 
     def on_find_euler_cycle(self):
@@ -424,7 +419,7 @@ class MainWindow(QDialog):
 
     def on_click_cycle(self):
         val = str(EulerGraph(self.spin.value()))
-        pixmap = QPixmap('src/__imgcache__/Ad1.png')
+        pixmap = QPixmap('src/__imgcache__/CoherentComponent.png')
         self.labelImage1.setPixmap(pixmap)
         self.labelImage2.setText("The euler cycle found is:")
         print(val)
@@ -450,7 +445,7 @@ class MainWindow(QDialog):
 
     def on_click_random_k(self):
         random_k_regular(self.spin.value(),self.spin1.value())
-        pixmap = QPixmap('src/__imgcache__/Ad.png')
+        pixmap = QPixmap('src/__imgcache__/RandomizeGraph.png')
         self.labelImage1.setPixmap(pixmap)
 
     def on_find_hamiltion_cycle(self):

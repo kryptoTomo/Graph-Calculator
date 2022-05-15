@@ -1,8 +1,13 @@
 from collections import defaultdict
 from Representation import AdjacencyList
-from Randomize import randomizeGraph
 import copy
+import random
 
+#------------------------------------------------------------------------------------------------------------------
+#
+# PROJECT 2
+#
+#------------------------------------------------------------------------------------------------------------------
 #ex1
 def valid_graph(seq):
     if len(seq)==0:
@@ -21,12 +26,37 @@ def valid_graph(seq):
         seq[0] =0
         seq = sorted(seq, reverse=True)
 
+#ex2   
+def randomizeGraph(adjacency_list,numberOfRandomize): 
+    i=0
+    data={'name': 'RandomizeGraph.png','size': (250, 250),'directed': True,'colors': [],'graph': copy.deepcopy(adjacency_list.graph)}
+    while i<numberOfRandomize:
+        a=random.sample(list(data['graph'].keys()),1)[0]
+        b=random.sample(list(data['graph'][a]),1)[0]
+        c=random.sample(list(data['graph'].keys()),1)[0]
+        d=random.sample(list(data['graph'][c]),1)[0]
+        if a!=c and a!=d and b!=c and b!=d and c not in data['graph'][a] and d not in data['graph'][b]:
+            data['graph'][a].remove(b)
+            data['graph'][b].remove(a)
+
+            data['graph'][c].remove(d)
+            data['graph'][d].remove(c)
+
+            data['graph'][a].append(c)
+            data['graph'][c].append(a)
+
+            data['graph'][b].append(d)
+            data['graph'][d].append(b) 
+
+            i+=1
+    return AdjacencyList(data)
+
 #konstrukcja grafu prostego  o stopniach wierzchołków zadanych przez ciąg graficzny
 def cons_graph(seq):
     seq = sorted(seq, reverse=True)
     out = []
     
-    data={'name': 'Ad1.png','directed': True,'colors': [],'graph':{}}
+    data={'name': 'CoherentComponent.png','size': (600, 600),'directed': True,'colors': [],'graph':{}}
     for i in range(len(seq)):                       #+1
         data['graph'][i]=[]
 

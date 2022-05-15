@@ -4,7 +4,7 @@ from Representation import AdjacencyList
 class Generator:
     @staticmethod
     def rand_graph_edge_number(n, l):
-        data={'name': 'Ad3 (1).png','directed': True,'colors': [],'graph':{}}
+        data={'name': 'randomGraphEdgeNumber.png','size': (600, 600),'directed': True,'colors': [],'graph':{}}
         for i in range(n):
             data['graph'][i]=[]
         edges_count=0
@@ -14,11 +14,12 @@ class Generator:
                 data['graph'][edge[0]].append(edge[1])
                 data['graph'][edge[1]].append(edge[0])
                 edges_count+=1
+        print(data)
         return AdjacencyList(data)
 
     @staticmethod
     def rand_graph_edge_probability(n, p):
-        data={'name': 'Ad3 (2).png','directed': True,'colors': [],'graph':{}}
+        data={'name': 'randGraphEdgeProbability.png','size': (600, 600),'directed': True,'colors': [],'graph':{}}
         for i in range(n):
             data['graph'][i]=[]
         for i in range(n):

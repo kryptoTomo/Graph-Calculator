@@ -1,5 +1,3 @@
-import random as rnd
-from Representation import AdjacencyList
 from Utils import valid_graph, cons_graph
 from random import choice
 from Representation import *
