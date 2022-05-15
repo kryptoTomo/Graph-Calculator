@@ -9,6 +9,8 @@ from Generator import *
 from Representation import AdjacencyMatrix, IncidentMatrix
 from Randomize import randomizeGraph
 from Utils import components, valid_graph, cons_graph, random_k_regular, find_Hamiltion_cycle
+from EulerGraph import EulerGraph
+
 graph_representation_list = ['Select Graph Representation','AdjacencyList','AdjacencyMatrix','IncidentMatrix']
 data={'name': 'tmpImg.png',
        'directed': True,
@@ -302,15 +304,18 @@ class MainWindow(QDialog):
         self.layout0 = QVBoxLayout()
         self.validGraphButton = QPushButton('Valid Graph',self)
         self.edgeRandomizationButton = QPushButton('Edge Randomize',self)
+        self.findEulerCycleButton = QPushButton('Euler Cycle',self)
         self.findHamiltionCycleButton = QPushButton('Find Hamiltion Cycle',self)
 
         self.kRegularGraphsButton = QPushButton('K-Regular Graphs',self)
         self.layout0.addWidget(self.validGraphButton)
         self.layout0.addWidget(self.edgeRandomizationButton)
+        self.layout0.addWidget(self.findEulerCycleButton)
         self.layout0.addWidget(self.kRegularGraphsButton)
         self.layout0.addWidget(self.findHamiltionCycleButton)
         self.validGraphButton.clicked.connect(self.on_valid_graph)
         self.edgeRandomizationButton.clicked.connect(self.on_edge_randomize)
+        self.findEulerCycleButton.clicked.connect(self.on_find_euler_cycle)
         self.findHamiltionCycleButton.clicked.connect(self.on_find_hamiltion_cycle)
         self.kRegularGraphsButton.clicked.connect(self.on_k_regular_graphs)
         self.layoutLeftGroupBox.addLayout(self.layout0)
@@ -339,6 +344,7 @@ class MainWindow(QDialog):
         self.layoutRightGroupBox.addLayout(self.layout4)
         self.layoutRightGroupBox.addLayout(self.layout3)
         valid.clicked.connect(self.on_click_valid)
+
     def on_click_valid(self):
         if valid_graph(ast.literal_eval(self.inputTextEdit.toPlainText())):
             self.labelImage4.setText("The graph is graphical")
@@ -349,6 +355,7 @@ class MainWindow(QDialog):
             self.labelImage3.setText(tmpStr)
         else:
             self.labelImage4.setText("The graph is not graphical")
+
     def on_edge_randomize(self):
         self.clear_right_layout()
 
@@ -395,6 +402,33 @@ class MainWindow(QDialog):
         randomizeGraph(tmp,self.spin.value()).graphVisualization()
         pixmap = QPixmap('src/__imgcache__/Ad.png')
         self.labelImage3.setPixmap(pixmap)
+
+    def on_find_euler_cycle(self):
+        self.clear_right_layout()
+        self.layout3=QVBoxLayout()
+        self.layout4=QHBoxLayout()
+        cycle = QPushButton('Find Euler Cycle(n)',self)
+        self.spin = QSpinBox()
+        self.spin.setValue(5)
+        self.layout4.addWidget(cycle)
+        self.layout4.addWidget(self.spin)
+        self.labelImage1 = QLabel()
+        self.labelImage2 = QLabel()
+        self.labelImage3 = QLabel()
+        self.layout3.addWidget(self.labelImage1)
+        self.layout3.addWidget(self.labelImage2)
+        self.layout3.addWidget(self.labelImage3)
+        self.layoutRightGroupBox.addLayout(self.layout4)
+        self.layoutRightGroupBox.addLayout(self.layout3)
+        cycle.clicked.connect(self.on_click_cycle)
+
+    def on_click_cycle(self):
+        val = str(EulerGraph(self.spin.value()))
+        pixmap = QPixmap('src/__imgcache__/Ad1.png')
+        self.labelImage1.setPixmap(pixmap)
+        self.labelImage2.setText("The euler cycle found is:")
+        print(val)
+        self.labelImage3.setText(val)
 
     def on_k_regular_graphs(self):
         self.clear_right_layout()

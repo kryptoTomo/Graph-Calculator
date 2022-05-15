@@ -5,6 +5,8 @@ import copy
 
 #ex1
 def valid_graph(seq):
+    if len(seq)==0:
+        return False
     # jeśli liczba wszystkich nieparzystych elementów jest nieparzysta, to ciąg na pewno nie jest graficzny
     seq = sorted(seq, reverse=True)
     if sum(1 for i in seq if i%2==1)%2 == 1:
