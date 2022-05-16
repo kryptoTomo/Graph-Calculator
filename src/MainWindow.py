@@ -482,6 +482,6 @@ class MainWindow(QDialog):
         # find_Hamiltion_cycle
         data['graph']=ast.literal_eval(self.inputTextEdit.toPlainText())
         AdjacencyList(data).graphVisualization()
-        pixmap = QPixmap('src/__imgcache__/Ad1.png')
+        pixmap = QPixmap('src/__imgcache__/Representation.png')
         self.labelImage1.setPixmap(pixmap)
-        self.labelImage3.setText(str(find_Hamiltion_cycle(AdjacencyList(data).graph)))
+        self.labelImage3.setText(str(find_Hamiltion_cycle(AdjacencyList(data).graph,1,[])))
