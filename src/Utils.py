@@ -106,7 +106,7 @@ def components(G):
         if len(comp_v) > comp_big_len:
             comp_big = comp
             comp_big_len = len(comp_v)
-        tmpStr+=f'{comp}) {comp_v}\n'
+        tmpStr+=f'{comp}) {[i+1 for i in comp_v]}\n'
         print(f'{comp}) {comp_v}')
         comps.append(comp_v)
 

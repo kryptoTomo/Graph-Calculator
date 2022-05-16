@@ -18,6 +18,7 @@ class EulerGraph():
         self.create_euler_tour(current)
         self.graphList =  deepcopy(list(self.graph.graph.values()))
         self.euler_cycle = self.euler_cycle[0:len(self.euler_cycle)//2+1]
+        self.euler_cycle = [x+1 for x in self.euler_cycle]
 
     def generate_random_euler_graph(self,nodes):
         if nodes <= 2:
