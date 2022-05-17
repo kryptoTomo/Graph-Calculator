@@ -6,7 +6,7 @@ class Generator:
     @staticmethod
     def rand_graph_edge_number(n, l):
         data={'name': 'randomGraphEdgeNumber.png','size': (600, 600),'directed': True,'colors': [],'graph':{}}
-        if l > math.factorial(n-1) :
+        if l > n*(n-1)/2:
             raise ValueError("Invalid number of nodes and edges")
         for i in range(n):
             data['graph'][i]=[]
