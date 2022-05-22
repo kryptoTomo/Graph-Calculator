@@ -12,7 +12,7 @@ from EulerGraph import EulerGraph
 
 graph_representation_list = ['Select Graph Representation','AdjacencyList','AdjacencyMatrix','IncidentMatrix']
 
-data={'name': 'Representation.png','size': (250, 250),'directed': True,'colors': [],'graph': None}
+data={'name': 'Representation.png','size': (3, 3),'directed_all': False,'node_size': 500,'graph': None,'nodes_description':{},'edges_description':{}}
 
 class MainWindow(QDialog):
     def __init__(self, parent=None):

@@ -1,38 +1,99 @@
-from igraph import *
+import networkx as nx
+import matplotlib.pyplot as plt
+import scipy.ndimage as ndimage
 import copy
+import random
+
+
+example_data={'name': 'Rysunek.png',
+              'size': (6,6),
+              'directed_all': True,
+              'node_size': 500,
+              'graph':{1:  [2,5,6], 
+                       2:  [1,3,6], 
+                       3:  [2,4,5,12], 
+                       4:  [3,8,9,11], 
+                       5:  [1,3,7,9], 
+                       6:  [1,2,7], 
+                       7:  [5,6,8], 
+                       8:  [4,7,9,12], 
+                       9:  [4,5,8,10], 
+                       10: [9], 
+                       11: [4], 
+                       12: [3,8]
+               },
+               'nodes_description':{1: {'color': '#%02X%02X%02X' % (random.randint(0,255),random.randint(0,255),random.randint(0,255))},
+                                    2: {'color': '#%02X%02X%02X' % (random.randint(0,255),random.randint(0,255),random.randint(0,255))},
+                                    3: {'color': '#%02X%02X%02X' % (random.randint(0,255),random.randint(0,255),random.randint(0,255))},
+                                    4: {'color': '#%02X%02X%02X' % (random.randint(0,255),random.randint(0,255),random.randint(0,255))},
+                                    5: {'color': '#%02X%02X%02X' % (random.randint(0,255),random.randint(0,255),random.randint(0,255))},
+                                    6: {'color': '#%02X%02X%02X' % (random.randint(0,255),random.randint(0,255),random.randint(0,255))},
+                                    7: {'color': '#%02X%02X%02X' % (random.randint(0,255),random.randint(0,255),random.randint(0,255))},
+                                    8: {'color': '#%02X%02X%02X' % (random.randint(0,255),random.randint(0,255),random.randint(0,255))},
+                                    9: {'color': '#%02X%02X%02X' % (random.randint(0,255),random.randint(0,255),random.randint(0,255))},
+                                    10: {'color': '#%02X%02X%02X' % (random.randint(0,255),random.randint(0,255),random.randint(0,255))},
+                                    11: {'color': '#%02X%02X%02X' % (random.randint(0,255),random.randint(0,255),random.randint(0,255))}
+        },
+        'edges_description': {(0,1):  {'weight': random.randint(0,99),'color': '#%02X%02X%02X' % (random.randint(0,255),random.randint (0,255),random.randint(0,255)) ,'directed': random.sample([True,False],1)} ,
+                            (0, 4):  {'weight': random.randint(0,99),'color': '#%02X%02X%02X' % (random.randint(0,255),random.randint(0,255),random.randint(0,255)) ,'directed': random.sample([True,False],1)} ,
+                            (0, 5):  {'weight': random.randint(0,99),'color': '#%02X%02X%02X' % (random.randint(0,255),random.randint(0,255),random.randint(0,255)) ,'directed': random.sample([True,False],1)} ,
+                            (1, 2):  {'weight': random.randint(0,99),'color': '#%02X%02X%02X' % (random.randint(0,255),random.randint(0,255),random.randint(0,255)) ,'directed': random.sample([True,False],1)}
+        }  
+}
 
 class GraphRepresentation:
     def __init__(self, data):
+        self.graph=data['graph']
         self.name=data['name']
         self.size=data['size']
-        self.directed=data['directed']
-        self.colors=data['colors']
-        self.graph=data['graph']
+        self.node_size=data['node_size']
+        self.directed_all=data['directed_all']
+        self.nodes_description=data['nodes_description']
+        self.edges_description=data['edges_description']
         self.edges=[]
 
     def graphVisualization(self):
-        g = Graph()
+        plt.figure(figsize=self.size)
 
-        g.add_vertices(list(range(1,len(self.graph)+1)))
-        g.add_edges(self.edges)
+        G = nx.Graph()
 
-        g.vs["label"] = list(range(1,len(self.graph)+1))
-        layout = g.layout_circle()
+        G.add_nodes_from(range(len(self.graph)))
+        G.add_edges_from(self.edges)
 
-        visual_style = {}
-        visual_style["vertex_size"] = 20
-        visual_style["layout"] = layout
-        visual_style["bbox"] = self.size
-        visual_style["margin"] = 20
+        node_colors=list(i['color'] for i in self.nodes_description.values())
 
-        plot(g, **visual_style,target=f'src/__imgcache__/{self.name}')
+        edges_description_directed={ i[0]: i[1] for i in self.edges_description.items() if i[1]['directed']}
+        edges_description_no_directed={ i[0]: i[1] for i in self.edges_description.items() if not i[1]['directed']}
+
+        pos = nx.circular_layout(G)
+
+        nx.draw_networkx_nodes(G, pos, node_size = self.node_size)
+        nx.draw_networkx_nodes(G, pos, nodelist= list(self.nodes_description.keys()), node_color = node_colors, node_size = self.node_size)
+
+        nx.draw_networkx_labels(G, pos)
+
+        if self.directed_all:
+            nx.draw_networkx_edges(G, pos, edgelist=list(set(self.edges)-set(edges_description_directed.keys())),arrows = self.directed_all)
+        else:
+            nx.draw_networkx_edges(G, pos)
+
+        nx.draw_networkx_edges(G, pos, edgelist=list(edges_description_directed.keys()), edge_color=[i['color'] for i in edges_description_directed.values()], arrows=True)
+
+        nx.draw_networkx_edges(G, pos, edgelist=list(edges_description_no_directed.keys()), edge_color=[i['color'] for i in edges_description_no_directed.values()], arrows=False)
+
+        nx.draw_networkx_edge_labels(G,pos,edge_labels={ i[0]: i[1]['weight'] for i in self.edges_description.items()})
+
+        plt.savefig(f'src/__imgcache__/{self.name}')
+        # plt.show()
 
     def toAdjacencyList(self):
         data={}
         data['name']=copy.deepcopy(self.name)
         data['size']=copy.deepcopy(self.size)
-        data['directed']=copy.deepcopy(self.directed)
-        data['colors']=copy.deepcopy(self.colors)
+        data['node_size']=copy.deepcopy(self.node_size)
+        data['directed_all']=copy.deepcopy(self.directed_all)
+        data['nodes_description']=copy.deepcopy(self.nodes_description)
+        data['edges_description']=copy.deepcopy(self.edges_description)
 
         graph={}
 
@@ -51,8 +112,10 @@ class GraphRepresentation:
         data={}
         data['name']=copy.deepcopy(self.name)
         data['size']=copy.deepcopy(self.size)
-        data['directed']=copy.deepcopy(self.directed)
-        data['colors']=copy.deepcopy(self.colors)
+        data['node_size']=copy.deepcopy(self.node_size)
+        data['directed_all']=copy.deepcopy(self.directed_all)
+        data['nodes_description']=copy.deepcopy(self.nodes_description)
+        data['edges_description']=copy.deepcopy(self.edges_description)
 
         graph=[ [0 for _ in range(len(self.graph)) ] for _ in range(len(self.graph)) ]
 
@@ -67,8 +130,10 @@ class GraphRepresentation:
         data={}
         data['name']=copy.deepcopy(self.name)
         data['size']=copy.deepcopy(self.size)
-        data['directed']=copy.deepcopy(self.directed)
-        data['colors']=copy.deepcopy(self.colors)
+        data['node_size']=copy.deepcopy(self.node_size)
+        data['directed_all']=copy.deepcopy(self.directed_all)
+        data['nodes_description']=copy.deepcopy(self.nodes_description)
+        data['edges_description']=copy.deepcopy(self.edges_description)
 
         graph=[[0 for _ in range(len(self.edges))] for _ in range(len(self.graph)) ]
 
@@ -88,7 +153,7 @@ class AdjacencyList (GraphRepresentation):
 
         self.normalization={j: int(i) for i,j in enumerate(self.graph.keys())}
 
-        if self.directed:
+        if self.directed_all:
             for edge in self.graph.items():
                 self.edges.extend( [ (self.normalization[edge[0]],self.normalization[x]) for x in edge[1] if x>edge[0]] )
         else:

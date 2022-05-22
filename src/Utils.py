@@ -29,7 +29,7 @@ def valid_graph(seq):
 #ex2   
 def randomizeGraph(adjacency_list,numberOfRandomize): 
     i=0
-    data={'name': 'RandomizeGraph.png','size': (250, 250),'directed': True,'colors': [],'graph': copy.deepcopy(adjacency_list.graph)}
+    data={'name': 'RandomizeGraph.png','size': (6, 6),'directed_all': False,'node_size': 500,'graph': copy.deepcopy(adjacency_list.graph),'nodes_description':{},'edges_description':{}}
     while i<numberOfRandomize:
         a=random.sample(list(data['graph'].keys()),1)[0]
         b=random.sample(list(data['graph'][a]),1)[0]
@@ -56,7 +56,7 @@ def cons_graph(seq):
     seq = sorted(seq, reverse=True)
     out = []
     
-    data={'name': 'CoherentComponent.png','size': (600, 600),'directed': True,'colors': [],'graph':{}}
+    data={'name': 'CoherentComponent.png','size': (6, 6),'directed_all': False,'node_size': 500,'graph': {},'nodes_description':{},'edges_description':{}}
     for i in range(len(seq)):                       #+1
         data['graph'][i]=[]
 
