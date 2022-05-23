@@ -88,7 +88,32 @@ class Generator:
             data['graph'][random_node2].append(random_node1)
             data['edges_description'][(random_node1,random_node2)]={'weight': random.randint(0,10),'color': ''}
         return AdjacencyList(data)
-
+    @staticmethod
+    def random_undirected_consistent_graph(n):
+        data={'name': 'randomUndirectedConsistentGraph.png','size': (6, 6),'directed_all': False,'node_size': 500,'graph':{},'nodes_description':{},'edges_description':{}}
+        g = nx.Graph()
+        g.add_nodes_from(range(n))
+        l=random.randint(1,n*(n-1)/2)
+        for i in range(n):
+            data['graph'][i]=[]
+        edges_count=0
+        while edges_count<l:
+            edge=tuple(random.sample(range(n), 2))
+            if edge[0] not in data['graph'][edge[1]]: 
+                data['graph'][edge[0]].append(edge[1])
+                data['graph'][edge[1]].append(edge[0])
+                data['edges_description'][(edge[0],edge[1])]={'weight': random.randint(0,10),'color': '' ,'directed': False}
+                edges_count+=1
+                g.add_edge(edge[0],edge[1])
+        while not nx.is_connected(g):
+            list_of_comps = list(nx.connected_components(g))
+            random_node1 = random.sample(list(list_of_comps[1]), 1)[0]
+            random_node2 = random.sample(list(list_of_comps[0]), 1)[0]
+            g.add_edge(random_node1, random_node2)
+            data['graph'][random_node1].append(random_node2)
+            data['graph'][random_node2].append(random_node1)
+            data['edges_description'][(random_node1,random_node2)]={'weight': random.randint(1,10),'color': '' ,'directed': False}
+        return AdjacencyList(data)
 # Generator.rand_graph_edge_number(10, 5).graphVisualization()
 # Generator.rand_graph_edge_probability(10, 0.5).graphVisualization()
 # Generator.rand_digraph_edge_number(10, 5).graphVisualization()

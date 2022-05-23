@@ -8,7 +8,7 @@ import ast
 
 from Generator import *
 from Representation import AdjacencyMatrix, IncidentMatrix
-from Utils import components, valid_graph, cons_graph, random_k_regular, find_Hamiltion_cycle, randomizeGraph, plot_graph
+from Utils import components, valid_graph, cons_graph, random_k_regular, find_Hamiltion_cycle, randomizeGraph, plot_graph,dijkstra
 from EulerGraph import EulerGraph
 from Kosaraju import *
 from ShortPaths import *
@@ -517,13 +517,28 @@ class MainWindow(QDialog):
         #-------------------------
         self.random_undirected_consistent_graph_button = QPushButton('Random undirected consistent graph',self)
         self.random_undirected_consistent_graph_spin1_n = QSpinBox()
-        self.random_undirected_consistent_graph_spin1_n.setValue(10)
+        self.random_undirected_consistent_graph_spin1_n.setValue(6)
 
-        self.layout0 = QHBoxLayout()
-        self.layout0.addWidget(self.random_undirected_consistent_graph_button)
-        self.layout0.addWidget(self.random_undirected_consistent_graph_spin1_n)
+        self.layout1 = QHBoxLayout()
+        self.layout1.addWidget(self.random_undirected_consistent_graph_button)
+        self.layout1.addWidget(self.random_undirected_consistent_graph_spin1_n)
         self.random_undirected_consistent_graph_button.clicked.connect(self.on_random_undirected_consistent_graph)
+                
+        self.random_s03e02_button = QPushButton('Algortih Dijkstra For \nRandom undirected consistent graph',self)
+        self.random_s03e02_spin1_n = QSpinBox()
+        self.random_s03e02_spin1_n.setValue(6)
+        self.random_s03e02_spin2_n = QSpinBox()
+        self.random_s03e02_spin2_n.setValue(0)
 
+        self.layout2 = QHBoxLayout()
+        self.layout2.addWidget(self.random_s03e02_button)
+        self.layout2.addWidget(self.random_s03e02_spin1_n)
+        self.layout2.addWidget(self.random_s03e02_spin2_n)
+        self.random_s03e02_button.clicked.connect(self.on_s03e02_graph)
+
+        self.layout0=QVBoxLayout()
+        self.layout0.addLayout(self.layout1)
+        self.layout0.addLayout(self.layout2)
         self.layoutLeftGroupBox.addLayout(self.layout0)
 
     def on_random_undirected_consistent_graph(self):
@@ -533,6 +548,20 @@ class MainWindow(QDialog):
         pixmap = QPixmap('src/__imgcache__/randomUndirectedConsistentGraph.png')
         label.setPixmap(pixmap)
         self.layoutRightGroupBox.addWidget(label)
+
+    def on_s03e02_graph(self):
+        self.clear_right_layout()
+        tmp=Generator.random_undirected_consistent_graph(self.random_s03e02_spin1_n.value()).toAdjacencyList()
+        print(tmp.edges_description)
+        print(str(tmp.printGraph()))
+        tmp.graphVisualization()
+        
+        label = QLabel(self)
+        pixmap = QPixmap('src/__imgcache__/randomUndirectedConsistentGraph.png')
+        label.setPixmap(pixmap)
+        label_result=QLabel(str(dijkstra(self.random_s03e02_spin2_n.value(),tmp)))
+        self.layoutRightGroupBox.addWidget(label)
+        self.layoutRightGroupBox.addWidget(label_result)
 
 #+-----------------------------------------------------------------------------------------------------------------
 #
@@ -826,3 +855,9 @@ class MainWindow(QDialog):
         self.layout3.addLayout(self.layout4)
         self.layout3.addLayout(self.layout7)
         self.layoutRightGroupBox.addLayout(self.layout3)
+        Generator.random_undirected_consistent_graph(self.random_undirected_consistent_graph_spin1_n.value()).graphVisualization()
+        label = QLabel(self)
+        pixmap = QPixmap('src/__imgcache__/randomUndirectedConsistentGraph.png')
+        label.setPixmap(pixmap)
+        self.labelImage=QLabel()
+        self.layoutRightGroupBox.addWidget(label)

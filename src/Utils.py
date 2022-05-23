@@ -153,17 +153,17 @@ def find_Hamiltion_cycle(graph, v=1, stack=[]):
 #------------------------------------------------------------------------------------------------------------------
 
 #ex2
-def dijkstraWeight(data=dijkstra_data):
+def dijkstraWeight(data):
     weight_matrix = []
-    for node in data['graph']:
+    for node in data.graph:
         x = []
-        for path in range(1,len(data['graph'])+1):
+        for path in range(1,len(data.graph)+1):
             if path == node:
                 x.append(0)
-            elif (node - 1, path - 1) in data['edges_description']:
-                x.append(data['edges_description'][(node-1,path-1)]['weight'])
-            elif (path - 1, node - 1) in data['edges_description']:
-                x.append(data['edges_description'][(path-1,node-1)]['weight'])
+            elif (node - 1, path - 1) in data.edges_description:
+                x.append(data.edges_description[(node-1,path-1)]['weight'])
+            elif (path - 1, node - 1) in data.edges_description:
+                x.append(data.edges_description[(path-1,node-1)]['weight'])
             else:
                 x.append(0)
         weight_matrix.append(x)
@@ -177,26 +177,26 @@ def dijkstraMinDistance(weights, used):
                 min_index = weight
         return min_index
 
-def dijkstra(source, data = dijkstra_data):
-        if source > len(data['graph']):
+def dijkstra(source, data):
+        if source > len(data.graph):
             return
         weight_matrix = dijkstraWeight(data)
-        currentWeights = [1e10 for _ in range(len(data['graph']))]
+        currentWeights = [1e10 for _ in range(len(data.graph))]
         currentWeights[source - 1] = 0
-        used = [False for _ in range(len(data['graph']))]
+        used = [False for _ in range(len(data.graph))]
  
-        for _ in range(len(data['graph'])):
+        for _ in range(len(data.graph)):
             min = dijkstraMinDistance(currentWeights, used)
             used[min] = True
-            for v in range(len(data['graph'])):
+            for v in range(len(data.graph)):
                 if (weight_matrix[min][v] > 0 and used[v] == False and currentWeights[v] > currentWeights[min] + weight_matrix[min][v]):
                     currentWeights[v] = currentWeights[min] + weight_matrix[min][v]
         return currentWeights
- 
+
 #ex3
 def dijkstraDist(data = dijkstra_data):
     matrix = []
-    for i in range(len(data['graph'])):
+    for i in range(len(data.graph)):
         matrix.append(dijkstra(i+1, data))
     print(matrix)
     return matrix
