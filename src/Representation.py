@@ -5,39 +5,27 @@ import copy
 import random
 
 
+
 example_data={'name': 'Rysunek.png',
-              'size': (6,6),
+              'size': (10,10),
               'directed_all': True,
               'node_size': 500,
-              'graph':{1:  [2,5,6], 
-                       2:  [1,3,6], 
-                       3:  [2,4,5,12], 
-                       4:  [3,8,9,11], 
-                       5:  [1,3,7,9], 
-                       6:  [1,2,7], 
-                       7:  [5,6,8], 
-                       8:  [4,7,9,12], 
-                       9:  [4,5,8,10], 
-                       10: [9], 
-                       11: [4], 
-                       12: [3,8]
+              'graph':{0:  [1,4,5], 
+                       1:  [0,2,5], 
+                       2:  [1,3,4,11], 
+                       3:  [2,7,8,10], 
+                       4:  [0,2,6,8], 
+                       5:  [0,1,6], 
+                       6:  [4,5,7], 
+                       7:  [3,6,8,11], 
+                       8:  [3,4,7,0], 
+                       9:  [8], 
+                       10: [3], 
+                       11: [2,7]
                },
-               'nodes_description':{1: {'color': '#%02X%02X%02X' % (random.randint(0,255),random.randint(0,255),random.randint(0,255))},
-                                    2: {'color': '#%02X%02X%02X' % (random.randint(0,255),random.randint(0,255),random.randint(0,255))},
-                                    3: {'color': '#%02X%02X%02X' % (random.randint(0,255),random.randint(0,255),random.randint(0,255))},
-                                    4: {'color': '#%02X%02X%02X' % (random.randint(0,255),random.randint(0,255),random.randint(0,255))},
-                                    5: {'color': '#%02X%02X%02X' % (random.randint(0,255),random.randint(0,255),random.randint(0,255))},
-                                    6: {'color': '#%02X%02X%02X' % (random.randint(0,255),random.randint(0,255),random.randint(0,255))},
-                                    7: {'color': '#%02X%02X%02X' % (random.randint(0,255),random.randint(0,255),random.randint(0,255))},
-                                    8: {'color': '#%02X%02X%02X' % (random.randint(0,255),random.randint(0,255),random.randint(0,255))},
-                                    9: {'color': '#%02X%02X%02X' % (random.randint(0,255),random.randint(0,255),random.randint(0,255))},
-                                    10: {'color': '#%02X%02X%02X' % (random.randint(0,255),random.randint(0,255),random.randint(0,255))},
-                                    11: {'color': '#%02X%02X%02X' % (random.randint(0,255),random.randint(0,255),random.randint(0,255))}
-        },
-        'edges_description': {(0,1):  {'weight': random.randint(0,99),'color': '#%02X%02X%02X' % (random.randint(0,255),random.randint (0,255),random.randint(0,255)) ,'directed': random.sample([True,False],1)} ,
-                            (0, 4):  {'weight': random.randint(0,99),'color': '#%02X%02X%02X' % (random.randint(0,255),random.randint(0,255),random.randint(0,255)) ,'directed': random.sample([True,False],1)} ,
-                            (0, 5):  {'weight': random.randint(0,99),'color': '#%02X%02X%02X' % (random.randint(0,255),random.randint(0,255),random.randint(0,255)) ,'directed': random.sample([True,False],1)} ,
-                            (1, 2):  {'weight': random.randint(0,99),'color': '#%02X%02X%02X' % (random.randint(0,255),random.randint(0,255),random.randint(0,255)) ,'directed': random.sample([True,False],1)}
+               'nodes_description': {},
+               'edges_description': {(0,1): {'weight': 1,'color': ''},
+                            (1, 0): {'weight': 2,'color': ''}
         }  
 }
 
@@ -55,15 +43,15 @@ class GraphRepresentation:
     def graphVisualization(self):
         plt.figure(figsize=self.size)
 
-        G = nx.Graph()
+        if self.directed_all:
+            G = nx.DiGraph()
+        else:
+            G = nx.Graph()
 
         G.add_nodes_from(range(len(self.graph)))
         G.add_edges_from(self.edges)
 
-        node_colors=list(i['color'] for i in self.nodes_description.values())
-
-        edges_description_directed={ i[0]: i[1] for i in self.edges_description.items() if i[1]['directed']}
-        edges_description_no_directed={ i[0]: i[1] for i in self.edges_description.items() if not i[1]['directed']}
+        node_colors=list(i['color']  for i in self.nodes_description.values())
 
         pos = nx.circular_layout(G)
 
@@ -72,16 +60,9 @@ class GraphRepresentation:
 
         nx.draw_networkx_labels(G, pos)
 
-        if self.directed_all:
-            nx.draw_networkx_edges(G, pos, edgelist=list(set(self.edges)-set(edges_description_directed.keys())),arrows = self.directed_all)
-        else:
-            nx.draw_networkx_edges(G, pos)
+        nx.draw_networkx_edges(G, pos, arrows=self.directed_all)
 
-        nx.draw_networkx_edges(G, pos, edgelist=list(edges_description_directed.keys()), edge_color=[i['color'] for i in edges_description_directed.values()], arrows=True)
-
-        nx.draw_networkx_edges(G, pos, edgelist=list(edges_description_no_directed.keys()), edge_color=[i['color'] for i in edges_description_no_directed.values()], arrows=False)
-
-        nx.draw_networkx_edge_labels(G,pos,edge_labels={ i[0]: i[1]['weight'] for i in self.edges_description.items()})
+        nx.draw_networkx_edge_labels(G, pos, edge_labels={ i[0]: i[1]['weight'] for i in self.edges_description.items()},label_pos = 0.2 if self.directed_all else 0.4,font_size=5)
 
         plt.savefig(f'src/__imgcache__/{self.name}')
         # plt.show()
@@ -95,6 +76,8 @@ class GraphRepresentation:
         data['nodes_description']=copy.deepcopy(self.nodes_description)
         data['edges_description']=copy.deepcopy(self.edges_description)
 
+        print(self.edges)
+
         graph={}
 
         for i in range(len(self.graph)):
@@ -102,7 +85,6 @@ class GraphRepresentation:
 
         for edge in self.edges:
             graph[edge[0]].append(edge[1])
-            graph[edge[1]].append(edge[0])
 
         data['graph']=copy.deepcopy(graph)
 
@@ -117,11 +99,12 @@ class GraphRepresentation:
         data['nodes_description']=copy.deepcopy(self.nodes_description)
         data['edges_description']=copy.deepcopy(self.edges_description)
 
+        print(self.edges)
+
         graph=[ [0 for _ in range(len(self.graph)) ] for _ in range(len(self.graph)) ]
 
         for edge in self.edges:
             graph[edge[0]][edge[1]] = 1
-            graph[edge[1]][edge[0]] = 1
 
         data['graph']=copy.deepcopy(graph)
 
@@ -134,12 +117,19 @@ class GraphRepresentation:
         data['directed_all']=copy.deepcopy(self.directed_all)
         data['nodes_description']=copy.deepcopy(self.nodes_description)
         data['edges_description']=copy.deepcopy(self.edges_description)
+        
+        edges=copy.deepcopy(self.edges)
+        for edge in edges:
+            if (edge[1],edge[0]) in edges:
+                edges.remove((edge[1],edge[0]))
 
-        graph=[[0 for _ in range(len(self.edges))] for _ in range(len(self.graph)) ]
+        graph=[[0 for _ in range(len(edges))] for _ in range(len(self.graph)) ]
 
-        for i in range(len(self.edges)):
-            graph[self.edges[i][0]][i]=1
-            graph[self.edges[i][1]][i]=1
+        print(self.edges)
+
+        for i in range(len(edges)):
+            graph[edges[i][0]][i]=1
+            graph[edges[i][1]][i]=1
 
         data['graph']=copy.deepcopy(graph)
 
@@ -155,10 +145,10 @@ class AdjacencyList (GraphRepresentation):
 
         if self.directed_all:
             for edge in self.graph.items():
-                self.edges.extend( [ (self.normalization[edge[0]],self.normalization[x]) for x in edge[1] if x>edge[0]] )
+                self.edges.extend( [ (self.normalization[edge[0]],self.normalization[x]) for x in edge[1]] )
         else:
             for edge in self.graph.items():
-                self.edges.extend( [ (self.normalization[edge[0]],self.normalization[x]) for x in edge[1]] )
+                self.edges.extend( [ (self.normalization[edge[0]],self.normalization[x]) for x in edge[1] if x>edge[0]] )
 
     def printGraph(self):
         # print('Adjacency List ', end='\n\n')
@@ -183,7 +173,7 @@ class AdjacencyMatrix (GraphRepresentation):
         super().__init__(data)
 
         for i in range(len(self.graph)):
-            for j in range(i+1):
+            for j in range(len(self.graph)):
                 if self.graph[i][j]==1:
                     self.edges.append( (i,j) )
 

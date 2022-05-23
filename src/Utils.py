@@ -142,4 +142,3 @@ def find_Hamiltion_cycle(graph, v=1, stack=[]):
             res = find_Hamiltion_cycle(graph, x, tmp_stack)
             if res is not None:
                 return res
-    
