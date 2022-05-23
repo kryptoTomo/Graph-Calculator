@@ -1,5 +1,5 @@
 from collections import defaultdict
-from Representation import AdjacencyList
+from Representation import AdjacencyList, AdjacencyMatrix, example_data, dijkstra_data
 import copy
 import random
 import matplotlib.pyplot as plt
@@ -145,6 +145,103 @@ def find_Hamiltion_cycle(graph, v=1, stack=[]):
             res = find_Hamiltion_cycle(graph, x, tmp_stack)
             if res is not None:
                 return res
+
+#------------------------------------------------------------------------------------------------------------------
+#
+# PROJECT 3
+#
+#------------------------------------------------------------------------------------------------------------------
+
+#ex2
+def dijkstraWeight(data=dijkstra_data):
+    weight_matrix = []
+    for node in data['graph']:
+        x = []
+        for path in range(1,len(data['graph'])+1):
+            if path == node:
+                x.append(0)
+            elif (node - 1, path - 1) in data['edges_description']:
+                x.append(data['edges_description'][(node-1,path-1)]['weight'])
+            elif (path - 1, node - 1) in data['edges_description']:
+                x.append(data['edges_description'][(path-1,node-1)]['weight'])
+            else:
+                x.append(0)
+        weight_matrix.append(x)
+    return weight_matrix
+
+def dijkstraMinDistance(weights, used):
+        min = 1e10
+        for weight in range(len(weights)):
+            if weights[weight] < min and used[weight] == False:
+                min = weights[weight]
+                min_index = weight
+        return min_index
+
+def dijkstra(source, data = dijkstra_data):
+        if source > len(data['graph']):
+            return
+        weight_matrix = dijkstraWeight(data)
+        currentWeights = [1e10 for _ in range(len(data['graph']))]
+        currentWeights[source - 1] = 0
+        used = [False for _ in range(len(data['graph']))]
+ 
+        for _ in range(len(data['graph'])):
+            min = dijkstraMinDistance(currentWeights, used)
+            used[min] = True
+            for v in range(len(data['graph'])):
+                if (weight_matrix[min][v] > 0 and used[v] == False and currentWeights[v] > currentWeights[min] + weight_matrix[min][v]):
+                    currentWeights[v] = currentWeights[min] + weight_matrix[min][v]
+        return currentWeights
+ 
+#ex3
+def dijkstraDist(data = dijkstra_data):
+    matrix = []
+    for i in range(len(data['graph'])):
+        matrix.append(dijkstra(i+1, data))
+    print(matrix)
+    return matrix
+
+#ex4
+def graphCenter(data = dijkstra_data):
+    matrix = dijkstraDist(data)
+    l = []
+    for m in matrix:
+        l.append(sum(m))
+    center = l.index(min(l)) + 1
+    print(center)
+
+def miniMaxCenter(data = dijkstra_data):
+    matrix = dijkstraDist(data)
+    l = []
+    for m in matrix:
+        l.append(max(m))
+    minimax = l.index(min(l)) + 1
+    print(minimax)
+
+#ex5
+def prim(data = dijkstra_data):
+    weights = dijkstraWeight(data)
+    key = [1e10 for _ in range(len(data['graph']))]
+    MST = [0 for _ in range(len(data['graph']))]
+    key[0] = 0
+    used = [False for _ in range(len(data['graph']))]
+    MST[0] = -1
+
+    for _ in range(len(data['graph'])):
+        min_dist = 1e10
+        for node in range(len(data['graph'])):
+            if key[node] < min_dist and used[node] == False:
+                min_dist = key[node]
+                min = node   
+        used[min] = True
+        for v in range(len(data['graph'])):
+                if weights[min][v] > 0 and used[v] == False and key[v] > weights[min][v]:
+                        key[v] = weights[min][v]
+                        MST[v] = min
+    print(MST)
+    for i in range(1, len(data['graph'])):
+            print (MST[i] + 1, "-", i + 1, "\t", weights[i][MST[i]])
+
 
 #------------------------------------------------------------------------------------------------------------------
 #
