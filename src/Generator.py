@@ -7,6 +7,7 @@ class Generator:
     @staticmethod
     def rand_graph_edge_number(n, l):
         data={'name': 'randomGraphEdgeNumber.png','size': (6, 6),'directed_all': False,'node_size': 500,'graph':{},'nodes_description':{},'edges_description':{}}
+
         if l > n*(n-1)/2:
             raise ValueError("Invalid number of nodes and edges")
         for i in range(n):
