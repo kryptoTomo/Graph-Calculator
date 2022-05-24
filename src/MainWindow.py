@@ -12,7 +12,7 @@ from EulerGraph import EulerGraph
 
 graph_representation_list = ['Select Graph Representation','AdjacencyList','AdjacencyMatrix','IncidentMatrix']
 
-data={'name': 'Representation.png','size': (250, 250),'directed': True,'colors': [],'graph': None}
+data={'name': 'Representation.png','size': (3, 3),'directed_all': False,'node_size': 500,'graph': None,'nodes_description':{},'edges_description':{}}
 
 class MainWindow(QDialog):
     def __init__(self, parent=None):
@@ -61,8 +61,6 @@ class MainWindow(QDialog):
         topLayout.addStretch(1)
 
         #delete if project is added
-        self.project3Button.setDisabled(True)
-        self.project4Button.setDisabled(True)
         self.project5Button.setDisabled(True)
         self.project6Button.setDisabled(True)
         #init main Layout
@@ -80,8 +78,8 @@ class MainWindow(QDialog):
         """
         self.project1Button.clicked.connect(self.initProject1)
         self.project2Button.clicked.connect(self.initProject2)
-        # self.project3Button.clicked.connect(self.initProject3)
-        # self.project4Button.clicked.connect(self.initProject4)
+        self.project3Button.clicked.connect(self.initProject3)
+        self.project4Button.clicked.connect(self.initProject4)
         # self.project5Button.clicked.connect(self.initProject5)
         # self.project6Button.clicked.connect(self.initProject6)
 
@@ -129,8 +127,8 @@ class MainWindow(QDialog):
     def enable_all(self):
         self.project1Button.setEnabled(True)
         self.project2Button.setEnabled(True)
-        # self.project3Button.setEnabled(True)
-        # self.project4Button.setEnabled(True)
+        self.project3Button.setEnabled(True)
+        self.project4Button.setEnabled(True)
         # self.project5Button.setEnabled(True)
         # self.project6Button.setEnabled(True)
 #+-----------------------------------------------------------------------------------------------------------------
@@ -196,7 +194,7 @@ class MainWindow(QDialog):
         self.clear_right_layout()
         Generator.rand_graph_edge_probability(self.rand_graph_edge_number_spin2_n.value(), self.rand_graph_edge_number_spin2_p.value()).graphVisualization()
         label = QLabel(self)
-        pixmap = QPixmap('src/__imgcache__/randGraphEdgeProbability.png')
+        pixmap = QPixmap('src/__imgcache__/randomGraphEdgeProbability.png')
         label.setPixmap(pixmap)
         self.layoutRightGroupBox.addWidget(label)
 
@@ -485,3 +483,66 @@ class MainWindow(QDialog):
         pixmap = QPixmap('src/__imgcache__/Representation.png')
         self.labelImage1.setPixmap(pixmap)
         self.labelImage3.setText(str(find_Hamiltion_cycle(AdjacencyList(data).graph,1,[])))
+
+#+-----------------------------------------------------------------------------------------------------------------
+#
+# PROJECT 3
+#
+#------------------------------------------------------------------------------------------------------------------
+    def initProject3(self):
+        self.enable_all()
+        self.project3Button.setDisabled(True)
+        self.clear_right_layout()
+        self.clear_left_layout()
+        #-------------------------
+        self.random_undirected_consistent_graph_button = QPushButton('Random undirected consistent graph',self)
+        self.random_undirected_consistent_graph_spin1_n = QSpinBox()
+        self.random_undirected_consistent_graph_spin1_n.setValue(10)
+
+        self.layout0 = QHBoxLayout()
+        self.layout0.addWidget(self.random_undirected_consistent_graph_button)
+        self.layout0.addWidget(self.random_undirected_consistent_graph_spin1_n)
+        self.random_undirected_consistent_graph_button.clicked.connect(self.on_random_undirected_consistent_graph)
+
+        self.layoutLeftGroupBox.addLayout(self.layout0)
+
+    def on_random_undirected_consistent_graph(self):
+        self.clear_right_layout()
+        Generator.rand_undirected_consistent_graph(self.random_undirected_consistent_graph_spin1_n.value()).graphVisualization()
+        label = QLabel(self)
+        pixmap = QPixmap('src/__imgcache__/randomUndirectedConsistentGraph.png')
+        label.setPixmap(pixmap)
+        self.layoutRightGroupBox.addWidget(label)
+
+#+-----------------------------------------------------------------------------------------------------------------
+#
+# PROJECT 4
+#
+#------------------------------------------------------------------------------------------------------------------
+    def initProject4(self):
+        self.enable_all()
+        self.project4Button.setDisabled(True)
+        self.clear_right_layout()
+        self.clear_left_layout()
+        #-------------------------
+        self.random_digraph_edge_number_button = QPushButton('Random digraph edge number',self)
+        self.random_digraph_edge_number_spin1_n = QSpinBox()
+        self.random_digraph_edge_number_spin1_n.setValue(10)
+        self.random_digraph_edge_number_spin1_l = QSpinBox()
+        self.random_digraph_edge_number_spin1_l.setValue(5)
+
+        self.layout0 = QHBoxLayout()
+        self.layout0.addWidget(self.random_digraph_edge_number_button)
+        self.layout0.addWidget(self.random_digraph_edge_number_spin1_n)
+        self.layout0.addWidget(self.random_digraph_edge_number_spin1_l)
+        self.random_digraph_edge_number_button.clicked.connect(self.on_random_digraph_edge_number)
+
+        self.layoutLeftGroupBox.addLayout(self.layout0)
+
+    def on_random_digraph_edge_number(self):
+        self.clear_right_layout()
+        Generator.rand_digraph_edge_number(self.random_digraph_edge_number_spin1_n.value(),self.random_digraph_edge_number_spin1_l.value()).graphVisualization()
+        label = QLabel(self)
+        pixmap = QPixmap('src/__imgcache__/randomDigraphEdgeNumber.png')
+        label.setPixmap(pixmap)
+        self.layoutRightGroupBox.addWidget(label)
