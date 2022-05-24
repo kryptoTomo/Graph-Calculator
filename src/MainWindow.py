@@ -1,3 +1,4 @@
+from telnetlib import SE
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt 
 from PyQt5.QtWidgets import (QApplication, QComboBox,
@@ -9,6 +10,8 @@ from Generator import *
 from Representation import AdjacencyMatrix, IncidentMatrix
 from Utils import components, valid_graph, cons_graph, random_k_regular, find_Hamiltion_cycle, randomizeGraph
 from EulerGraph import EulerGraph
+from Kosaraju import *
+from ShortPaths import *
 
 graph_representation_list = ['Select Graph Representation','AdjacencyList','AdjacencyMatrix','IncidentMatrix']
 
@@ -24,6 +27,8 @@ class MainWindow(QDialog):
         self.layout2=None
         self.layout3=None
         self.layout4=None
+        self.layout5=None
+        self.layout6=None
         #connect functionality with methods
         self.setupQtConnections()
         #set geometry
@@ -114,6 +119,16 @@ class MainWindow(QDialog):
             for i in reversed(range(self.layout2.count())):
                 try:
                     self.layout2.itemAt(i).widget().setParent(None)
+                except:pass
+        if self.layout5:
+            for i in reversed(range(self.layout5.count())):
+                try:
+                    self.layout5.itemAt(i).widget().setParent(None)
+                except:pass
+        if self.layout6:
+            for i in reversed(range(self.layout6.count())):
+                try:
+                    self.layout6.itemAt(i).widget().setParent(None)
                 except:pass
         for i in reversed(range(self.layoutRightGroupBox.count())):
             try:
@@ -525,7 +540,8 @@ class MainWindow(QDialog):
         self.clear_right_layout()
         self.clear_left_layout()
         #-------------------------
-        self.random_digraph_edge_number_button = QPushButton('Random digraph edge number',self)
+        #1.1
+        self.random_digraph_edge_number_button = QPushButton('Random digraph edge(n,v)',self)
         self.random_digraph_edge_number_spin1_n = QSpinBox()
         self.random_digraph_edge_number_spin1_n.setValue(10)
         self.random_digraph_edge_number_spin1_l = QSpinBox()
@@ -536,8 +552,66 @@ class MainWindow(QDialog):
         self.layout0.addWidget(self.random_digraph_edge_number_spin1_n)
         self.layout0.addWidget(self.random_digraph_edge_number_spin1_l)
         self.random_digraph_edge_number_button.clicked.connect(self.on_random_digraph_edge_number)
+        #1.2
+        self.random_digraph_edge_prob_button = QPushButton('Random digraph edge(n,p)',self)
+        self.random_digraph_edge_prob_spin1_n = QSpinBox()
+        self.random_digraph_edge_prob_spin1_n.setValue(10)
+        self.random_digraph_edge_prob_spin1_l = QDoubleSpinBox()
+        self.random_digraph_edge_prob_spin1_l.setSingleStep(0.1)
+        self.random_digraph_edge_prob_spin1_l.setValue(0.5)
+
+        self.layout1 = QHBoxLayout()
+        self.layout1.addWidget(self.random_digraph_edge_prob_button)
+        self.layout1.addWidget(self.random_digraph_edge_prob_spin1_n)
+        self.layout1.addWidget(self.random_digraph_edge_prob_spin1_l)
+        self.random_digraph_edge_prob_button.clicked.connect(self.on_random_digraph_edge_prob)
+
+        #2
+        self.kosaraju_button = QPushButton('Kosaraju Algorithm (Random(n,p))',self)
+        self.kosaraju_spin1_n = QSpinBox()
+        self.kosaraju_spin1_n.setValue(10)
+        self.kosaraju_spin1_l = QDoubleSpinBox()
+        self.kosaraju_spin1_l.setSingleStep(0.1)
+        self.kosaraju_spin1_l.setValue(0.5)
+
+        self.layout2 = QHBoxLayout()
+        self.layout2.addWidget(self.kosaraju_button)
+        self.layout2.addWidget(self.kosaraju_spin1_n)
+        self.layout2.addWidget(self.kosaraju_spin1_l)
+        self.kosaraju_button.clicked.connect(self.on_kosaraju)
+
+        self.bellman_ford_button = QPushButton('Bellma Ford Algorithm (Random(n,p))',self)
+        self.bellman_ford_spin1_n = QSpinBox()
+        self.bellman_ford_spin1_n.setValue(10)
+        self.bellman_ford_spin1_l = QDoubleSpinBox()
+        self.bellman_ford_spin1_l.setSingleStep(0.1)
+        self.bellman_ford_spin1_l.setValue(0.5)
+
+        self.layout5 = QHBoxLayout()
+        self.layout5.addWidget(self.bellman_ford_button)
+        self.layout5.addWidget(self.bellman_ford_spin1_n)
+        self.layout5.addWidget(self.bellman_ford_spin1_l)
+        self.bellman_ford_button.clicked.connect(self.on_bellman_ford)
+
+        #5
+        self.johnson_button = QPushButton('Johnson Algorithm (Random(n,p))',self)
+        self.johnson_spin1_n = QSpinBox()
+        self.johnson_spin1_n.setValue(10)
+        self.johnson_spin1_l = QDoubleSpinBox()
+        self.johnson_spin1_l.setSingleStep(0.1)
+        self.johnson_spin1_l.setValue(0.5)
+
+        self.layout6 = QHBoxLayout()
+        self.layout6.addWidget(self.johnson_button)
+        self.layout6.addWidget(self.johnson_spin1_n)
+        self.layout6.addWidget(self.johnson_spin1_l)
+        self.johnson_button.clicked.connect(self.on_johnson)
 
         self.layoutLeftGroupBox.addLayout(self.layout0)
+        self.layoutLeftGroupBox.addLayout(self.layout1)
+        self.layoutLeftGroupBox.addLayout(self.layout2)
+        self.layoutLeftGroupBox.addLayout(self.layout5)
+        self.layoutLeftGroupBox.addLayout(self.layout6)
 
     def on_random_digraph_edge_number(self):
         self.clear_right_layout()
@@ -546,3 +620,54 @@ class MainWindow(QDialog):
         pixmap = QPixmap('src/__imgcache__/randomDigraphEdgeNumber.png')
         label.setPixmap(pixmap)
         self.layoutRightGroupBox.addWidget(label)
+
+    def on_random_digraph_edge_prob(self):
+        self.clear_right_layout()
+        Generator.rand_digraph_edge_probability(self.random_digraph_edge_prob_spin1_n.value(),self.random_digraph_edge_prob_spin1_l.value()).graphVisualization()
+        label = QLabel(self)
+        pixmap = QPixmap('src/__imgcache__/randomDigraphEdgeProbability.png')
+        label.setPixmap(pixmap)
+        self.layoutRightGroupBox.addWidget(label)
+    
+    def on_kosaraju(self):
+        self.clear_right_layout()
+        tmp = Kosaraju(self.kosaraju_spin1_n.value(),self.kosaraju_spin1_l.value(),True)
+        label = QLabel(self)
+        pixmap = QPixmap('src/__imgcache__/randomDigraphEdgeProbability.png')
+        label.setPixmap(pixmap)
+        self.layoutRightGroupBox.addWidget(label)
+        self.layoutRightGroupBox.addWidget(QLabel("Result:"))
+        self.layoutRightGroupBox.addWidget(QLabel(str(tmp)))
+
+    def on_bellman_ford(self):
+        self.clear_right_layout()
+        repres = Generator.rand_digraph_edge_probability(self.bellman_ford_spin1_n.value(),self.bellman_ford_spin1_l.value())
+        repres.graphVisualization()
+        label = QLabel(self)
+        pixmap = QPixmap('src/__imgcache__/randomDigraphEdgeProbability.png')
+        label.setPixmap(pixmap)
+        graph=[]
+
+        for i in repres.graph.keys():
+            for j in repres.graph[i]:
+                graph.append([i,j,repres.edges_description[(i,j)]['weight']])
+        self.layoutRightGroupBox.addWidget(label)
+        self.layoutRightGroupBox.addWidget(QLabel("Result:"))
+        self.layoutRightGroupBox.addWidget(QLabel(str(ShortPaths.bellman_ford(0,graph,self.bellman_ford_spin1_n.value()))))
+
+    def on_johnson(self):
+        self.clear_right_layout()
+        tmp=Generator.rand_digraph_edge_probability(self.johnson_spin1_n.value(),self.johnson_spin1_l.value()).toAdjacencyList()
+        tmp.graphVisualization()
+        ShortPaths.johnson(tmp)
+        label = QLabel(self)
+        pixmap = QPixmap('src/__imgcache__/randomDigraphEdgeProbability.png')
+        label.setPixmap(pixmap)
+
+        self.layoutRightGroupBox.addWidget(label)
+        self.layoutRightGroupBox.addWidget(QLabel("Result:"))
+        self.layoutRightGroupBox.addWidget(QLabel(ShortPaths.johnson(tmp)))
+
+# t=Generator.rand_digraph_edge_probability(6, 0.4).toAdjacencyList()
+# t.graphVisualization()
+# ShortPaths.johnson(t)

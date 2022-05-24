@@ -2,7 +2,7 @@ from collections import defaultdict
 from Representation import AdjacencyList
 import copy
 import random
-
+from Generator import Generator
 #------------------------------------------------------------------------------------------------------------------
 #
 # PROJECT 2

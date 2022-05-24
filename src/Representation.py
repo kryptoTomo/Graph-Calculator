@@ -65,6 +65,7 @@ class GraphRepresentation:
         nx.draw_networkx_edge_labels(G, pos, edge_labels={ i[0]: i[1]['weight'] for i in self.edges_description.items()},label_pos = 0.2 if self.directed_all else 0.4,font_size=5)
 
         plt.savefig(f'src/__imgcache__/{self.name}')
+        plt.close()
         # plt.show()
 
     def toAdjacencyList(self):
