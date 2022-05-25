@@ -659,7 +659,7 @@ class MainWindow(QDialog):
         self.clear_right_layout()
         tmp=Generator.rand_digraph_edge_probability(self.johnson_spin1_n.value(),self.johnson_spin1_l.value()).toAdjacencyList()
         tmp.graphVisualization()
-        ShortPaths.johnson(tmp)
+        # ShortPaths.johnson(tmp)
         label = QLabel(self)
         pixmap = QPixmap('src/__imgcache__/randomDigraphEdgeProbability.png')
         label.setPixmap(pixmap)

@@ -47,6 +47,7 @@ class Generator:
             if edge[0] not in data['graph'][edge[1]]: 
                 data['graph'][edge[1]].append(edge[0])
                 edges_count+=1
+                data['edges_description'][(edge[1],edge[0])]={'weight': random.randint(0,15),'color': '#%02X%02X%02X' % (random.randint(0,255),random.randint (0,255),random.randint(0,255))}
         return AdjacencyList(data)
 
     @staticmethod
