@@ -224,26 +224,27 @@ def miniMaxCenter(data = dijkstra_data):
 #ex5
 def prim(data = dijkstra_data):
     weights = dijkstraWeight(data)
-    key = [1e10 for _ in range(len(data['graph']))]
-    MST = [0 for _ in range(len(data['graph']))]
+    len_data = len(data.graph)
+    key = [1e10 for _ in range(len_data)]
+    MST = [0 for _ in range(len_data)]
     key[0] = 0
-    used = [False for _ in range(len(data['graph']))]
+    used = [False for _ in range(len_data)]
     MST[0] = -1
 
-    for _ in range(len(data['graph'])):
+    for _ in range(len_data):
         min_dist = 1e10
-        for node in range(len(data['graph'])):
+        for node in range(len_data):
             if key[node] < min_dist and used[node] == False:
                 min_dist = key[node]
                 min = node   
         used[min] = True
-        for v in range(len(data['graph'])):
+        for v in range(len_data):
                 if weights[min][v] > 0 and used[v] == False and key[v] > weights[min][v]:
                         key[v] = weights[min][v]
                         MST[v] = min
     print(MST)
-    for i in range(1, len(data['graph'])):
-            print (MST[i] + 1, "-", i + 1, "\t", weights[i][MST[i]])
+    for i in range(1, len_data):
+            print (MST[i], "-", i, "\t", weights[i][MST[i]])
 
 
 #------------------------------------------------------------------------------------------------------------------
