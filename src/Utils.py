@@ -181,7 +181,7 @@ def dijkstraMinDistance(weights, used):
         return min_index
 
 def dijkstra(source, data):
-        if source > len(data.graph):
+        if source >= len(data.graph):
             return
         weight_matrix = dijkstraWeight(data)
         currentWeights = [1e10 for _ in range(len(data.graph))]
