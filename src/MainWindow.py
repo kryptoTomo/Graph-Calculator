@@ -12,6 +12,8 @@ from Utils import components, valid_graph, cons_graph, random_k_regular, find_Ha
 from EulerGraph import EulerGraph
 from Kosaraju import *
 from ShortPaths import *
+from PageRange import page_rank_random_wandering, page_rank_vector_iteration, di_graph
+from travelingsalesmanalgorithm import *
 
 graph_representation_list = ['Select Graph Representation','AdjacencyList','AdjacencyMatrix','IncidentMatrix']
 
@@ -29,6 +31,7 @@ class MainWindow(QDialog):
         self.layout4=None
         self.layout5=None
         self.layout6=None
+        self.layout7=None
         #connect functionality with methods
         self.setupQtConnections()
         #set geometry
@@ -67,7 +70,6 @@ class MainWindow(QDialog):
 
         #delete if project is added
         self.project5Button.setDisabled(True)
-        self.project6Button.setDisabled(True)
         #init main Layout
         mainLayout = QGridLayout()
         mainLayout.addLayout(topLayout, 0, 0,1,2)
@@ -86,7 +88,7 @@ class MainWindow(QDialog):
         self.project3Button.clicked.connect(self.initProject3)
         self.project4Button.clicked.connect(self.initProject4)
         # self.project5Button.clicked.connect(self.initProject5)
-        # self.project6Button.clicked.connect(self.initProject6)
+        self.project6Button.clicked.connect(self.initProject6)
 
     def clear_right_layout(self):
         if self.layout3:
@@ -98,6 +100,11 @@ class MainWindow(QDialog):
             for i in reversed(range(self.layout4.count())):
                 try:
                     self.layout4.itemAt(i).widget().setParent(None)
+                except:pass
+        if self.layout7:
+            for i in reversed(range(self.layout7.count())):
+                try:
+                    self.layout7.itemAt(i).widget().setParent(None)
                 except:pass
         for i in reversed(range(self.layoutRightGroupBox.count())):
             try:
@@ -145,7 +152,7 @@ class MainWindow(QDialog):
         self.project3Button.setEnabled(True)
         self.project4Button.setEnabled(True)
         # self.project5Button.setEnabled(True)
-        # self.project6Button.setEnabled(True)
+        self.project6Button.setEnabled(True)
 #+-----------------------------------------------------------------------------------------------------------------
 #
 # PROJECT 1
@@ -668,6 +675,101 @@ class MainWindow(QDialog):
         self.layoutRightGroupBox.addWidget(QLabel("Result:"))
         self.layoutRightGroupBox.addWidget(QLabel(ShortPaths.johnson(tmp)))
 
-# t=Generator.rand_digraph_edge_probability(6, 0.4).toAdjacencyList()
-# t.graphVisualization()
-# ShortPaths.johnson(t)
+#+-----------------------------------------------------------------------------------------------------------------
+#
+# PROJECT 6
+#
+#------------------------------------------------------------------------------------------------------------------
+    def initProject6(self):
+        self.enable_all()
+        self.project6Button.setDisabled(True)
+        self.clear_right_layout()
+        self.clear_left_layout()
+        #-------------------------
+        #1.1print(page_rank_random_wandering(di_graph, 0.15,1000000))
+        self.page_rank_random_wandering_button = QPushButton('Page rank random wandering',self)
+        self.page_rank_random_wandering_spin1_l = QDoubleSpinBox()
+        self.page_rank_random_wandering_spin1_l.setSingleStep(0.1)
+        self.page_rank_random_wandering_spin1_l.setValue(0.15)
+        self.page_rank_random_wandering_spin1_n = QSpinBox()
+        self.page_rank_random_wandering_spin1_n.setMaximum(2000000)
+        self.page_rank_random_wandering_spin1_n.setValue(1000000)
+        self.page_rank_random_wandering_button.clicked.connect(self.on_page_rank_random_wandering)
+
+        self.layout1 = QHBoxLayout()
+        self.layout1.addWidget(self.page_rank_random_wandering_button)
+        self.layout1.addWidget(self.page_rank_random_wandering_spin1_l)
+        self.layout1.addWidget(self.page_rank_random_wandering_spin1_n)
+
+        #1.2
+        self.page_rank_vector_iteration_button = QPushButton('Page rank vector iteration',self)
+        self.page_rank_vector_iteration_spin1_l = QDoubleSpinBox()
+        self.page_rank_vector_iteration_spin1_l.setSingleStep(0.1)
+        self.page_rank_vector_iteration_spin1_l.setValue(0.15)
+
+        self.layout2 = QHBoxLayout()
+        self.layout2.addWidget(self.page_rank_vector_iteration_button)
+        self.layout2.addWidget(self.page_rank_vector_iteration_spin1_l)
+        self.page_rank_vector_iteration_button.clicked.connect(self.on_page_rank_vector_iteration)
+        #2
+        self.traveling_salesman_algorithm_button = QPushButton('Traveling salesman algorithm',self)
+
+        self.layout0 = QHBoxLayout()
+        self.layout0.addWidget(self.traveling_salesman_algorithm_button)
+        self.traveling_salesman_algorithm_button.clicked.connect(self.on_traveling_salesman_algorithm)
+
+        self.layoutLeftGroupBox.addLayout(self.layout1)
+        self.layoutLeftGroupBox.addLayout(self.layout2)
+        self.layoutLeftGroupBox.addLayout(self.layout0)
+
+    def on_page_rank_random_wandering(self):
+        self.clear_right_layout()
+        self.layout3=QHBoxLayout()
+        label = QLabel(self)
+        pixmap = QPixmap('src/__imgcache__/Rysunek.png')
+        label.setPixmap(pixmap)
+        tmp = page_rank_random_wandering(di_graph, self.page_rank_random_wandering_spin1_l.value(),self.page_rank_random_wandering_spin1_n.value())
+        label1 = QLabel('\n'.join(str(i)+":"+str(j) for i,j in tmp.items()))
+        self.layout3.addWidget(label)
+        self.layout3.addWidget(label1)
+        self.layoutRightGroupBox.addLayout(self.layout3)
+
+    def on_page_rank_vector_iteration(self):
+        self.clear_right_layout()
+        self.layout3=QHBoxLayout()
+        label = QLabel(self)
+        pixmap = QPixmap('src/__imgcache__/Rysunek.png')
+        label.setPixmap(pixmap)
+        tmp=page_rank_vector_iteration(di_graph, self.page_rank_vector_iteration_spin1_l.value())
+        label1 = QLabel('\n'.join(str(i)+":"+str(j) for i,j in tmp.items()))
+        self.layout3.addWidget(label)
+        self.layout3.addWidget(label1)
+        self.layoutRightGroupBox.addLayout(self.layout3)
+
+    def on_traveling_salesman_algorithm(self):
+        self.clear_right_layout()
+        self.layout3=QHBoxLayout()
+
+        self.layout4=QVBoxLayout()
+        label0 = QLabel(self)
+        pixmap = QPixmap('src/__imgcache__/traveling_1.png')
+        label0.setPixmap(pixmap)
+        label1 = QLabel("Start Cycle Length")
+        label2 = QLabel(str(start_cycle_length))
+        self.layout4.addWidget(label0)
+        self.layout4.addWidget(label1)
+        self.layout4.addWidget(label2)
+        
+        self.layout7=QVBoxLayout()     
+        label3 = QLabel(self)
+        pixmap = QPixmap('src/__imgcache__/traveling_2.png')
+        label3.setPixmap(pixmap)
+        label4 = QLabel("End Cycle Length")
+        label5 = QLabel(str(end_cycle_length))
+        self.layout7.addWidget(label3)
+        self.layout7.addWidget(label4)
+        self.layout7.addWidget(label5)
+
+        self.layout3.addLayout(self.layout4)
+        self.layout3.addLayout(self.layout7)
+        self.layoutRightGroupBox.addLayout(self.layout3)
