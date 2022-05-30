@@ -2,7 +2,10 @@ from collections import defaultdict
 from Representation import AdjacencyList
 import copy
 import random
-from Generator import Generator
+import matplotlib.pyplot as plt
+import networkx as nx
+import numpy as np
+
 #------------------------------------------------------------------------------------------------------------------
 #
 # PROJECT 2
@@ -142,3 +145,64 @@ def find_Hamiltion_cycle(graph, v=1, stack=[]):
             res = find_Hamiltion_cycle(graph, x, tmp_stack)
             if res is not None:
                 return res
+
+#------------------------------------------------------------------------------------------------------------------
+#
+# PROJECT 5
+#
+#------------------------------------------------------------------------------------------------------------------
+
+def plot_graph(matrix, layers, filename, flow=None):
+    if matrix is None:
+        return
+
+    plt.figure(figsize=(6,6))
+
+    edges = []
+    for i in range(len(matrix)):
+        for j in range(len(matrix[0])):
+            if matrix[i][j] != 0:
+                edges.append((i+1, j+1, matrix[i][j])) 
+
+    colors = []
+    for k in range(len(edges)):
+        if flow!=None and  flow[( edges[k][0]-1, edges[k][1]-1 )] != 0:
+            colors.append('#0ee6d4')
+        else:
+            colors.append('#000000')
+
+    G = nx.DiGraph()
+    G.add_nodes_from(list( range(1, len(matrix)+1) ))
+
+    edgesL = []
+    for i in range(len(edges)):
+        if edges[i][0] == edges[i][1]:
+            edgesL.append(edges[i])
+        else:
+            G.add_edge(edges[i][0], edges[i][1], weight=edges[i][2])
+
+    labels = {}
+    pos = {}
+    nodes = np.concatenate(layers)
+    x = 0
+    for i in range(len(layers)):
+        for v in range(len(layers[i])):
+            x += 1
+            # pos.update({(x): (i*10+ 5*v, v * 20)})        # polozenia wierzcholkow nie na okregu 
+            labels[x] = nodes[x-1]
+
+    pos = nx.circular_layout(G)
+    nx.draw(G,pos,labels=labels, arrows=True, node_size=500, node_color='#0eafd4', edge_color=colors)
+
+    for i in range(len(edgesL)):
+        G.add_edge(edgesL[i][0], edgesL[i][1], weight=edgesL[i][2])
+    nx.draw_networkx_edges(G, pos, edgelist=edgesL)
+
+    l = nx.get_edge_attributes(G, 'weight')
+    labels = {}
+    for key, value in l.items():
+        labels[(key[0], key[1])] = str(flow[(key[0]-1, key[1]-1)]) + "/" + str(value) if flow!=None else value
+
+    nx.draw_networkx_edge_labels(G, pos, edge_labels=labels, font_size=10, label_pos = 0.15)
+    plt.savefig(f'src/__imgcache__/{filename}')
+    plt.close()
