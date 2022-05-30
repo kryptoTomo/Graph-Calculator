@@ -795,7 +795,7 @@ class MainWindow(QDialog):
         self.layout4.addWidget(label1)
         self.layout4.addWidget(label2)
         
-        f, fmax = Ford_Fulkerson_Ziom(g)
+        f, fmax = Ford_Fulkerson(g)
         Utils.plot_graph(g, layers, filename='ford_fulkerson_algorithm', flow=f)
         self.layout7=QVBoxLayout()     
         label3 = QLabel("Ford-Fulkerson algorithm")
