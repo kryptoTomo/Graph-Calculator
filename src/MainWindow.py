@@ -8,13 +8,13 @@ import ast
 
 from Generator import *
 from Representation import AdjacencyMatrix, IncidentMatrix
-from Utils import components, valid_graph, cons_graph, random_k_regular, find_Hamiltion_cycle, randomizeGraph
+from Utils import components, valid_graph, cons_graph, random_k_regular, find_Hamiltion_cycle, randomizeGraph, plot_graph
 from EulerGraph import EulerGraph
 from Kosaraju import *
 from ShortPaths import *
 from PageRange import page_rank_random_wandering, page_rank_vector_iteration, di_graph
 from travelingsalesmanalgorithm import *
-
+from p5ex12 import *
 graph_representation_list = ['Select Graph Representation','AdjacencyList','AdjacencyMatrix','IncidentMatrix']
 
 data={'name': 'Representation.png','size': (3, 3),'directed_all': False,'node_size': 500,'graph': None,'nodes_description':{},'edges_description':{}}
@@ -68,8 +68,6 @@ class MainWindow(QDialog):
         topLayout.addWidget(self.project6Button)
         topLayout.addStretch(1)
 
-        #delete if project is added
-        self.project5Button.setDisabled(True)
         #init main Layout
         mainLayout = QGridLayout()
         mainLayout.addLayout(topLayout, 0, 0,1,2)
@@ -87,7 +85,7 @@ class MainWindow(QDialog):
         self.project2Button.clicked.connect(self.initProject2)
         self.project3Button.clicked.connect(self.initProject3)
         self.project4Button.clicked.connect(self.initProject4)
-        # self.project5Button.clicked.connect(self.initProject5)
+        self.project5Button.clicked.connect(self.initProject5)
         self.project6Button.clicked.connect(self.initProject6)
 
     def clear_right_layout(self):
@@ -151,7 +149,7 @@ class MainWindow(QDialog):
         self.project2Button.setEnabled(True)
         self.project3Button.setEnabled(True)
         self.project4Button.setEnabled(True)
-        # self.project5Button.setEnabled(True)
+        self.project5Button.setEnabled(True)
         self.project6Button.setEnabled(True)
 #+-----------------------------------------------------------------------------------------------------------------
 #
@@ -675,6 +673,61 @@ class MainWindow(QDialog):
         self.layoutRightGroupBox.addWidget(QLabel("Result:"))
         self.layoutRightGroupBox.addWidget(QLabel(ShortPaths.johnson(tmp)))
 
+#+-----------------------------------------------------------------------------------------------------------------
+#
+# PROJECT 5
+#
+#------------------------------------------------------------------------------------------------------------------
+    def initProject5(self):
+        self.enable_all()
+        self.project5Button.setDisabled(True)
+        self.clear_right_layout()
+        self.clear_left_layout()
+        #-------------------------
+        self.proj5_button = QPushButton('Random flow network &\nFord-Fulkerson algorithm',self)
+        self.spin = QSpinBox()
+        self.spin.setValue(3)
+        self.proj5_button.clicked.connect(self.on_proj5)
+
+        self.layout1 = QHBoxLayout()
+        self.layout1.addWidget(self.proj5_button)
+        self.layout1.addWidget(self.spin)
+
+        self.layoutLeftGroupBox.addLayout(self.layout1)
+
+    def on_proj5(self):
+        self.clear_right_layout()
+        self.layout3=QHBoxLayout()
+
+        g, layers = random_flow_network(self.spin.value())
+        Utils.plot_graph(g, layers, filename='random_flow_network')
+
+        self.layout4=QVBoxLayout()
+        label0 = QLabel("Random flow network")
+        label1 = QLabel(self)
+        pixmap = QPixmap('src/__imgcache__/random_flow_network.png')
+        label1.setPixmap(pixmap)
+        label2 = QLabel(f'Layers: {layers}')
+        self.layout4.addWidget(label0)
+        self.layout4.addWidget(label1)
+        self.layout4.addWidget(label2)
+        
+        f, fmax = Ford_Fulkerson_Ziom(g)
+        Utils.plot_graph(g, layers, filename='ford_fulkerson_algorithm', flow=f)
+        self.layout7=QVBoxLayout()     
+        label3 = QLabel("Ford-Fulkerson algorithm")
+        label4 = QLabel(self)
+        pixmap = QPixmap('src/__imgcache__/ford_fulkerson_algorithm.png')
+        label4.setPixmap(pixmap)
+        label5 = QLabel(f"Maximum flow value |Fmax| = {fmax}")
+        self.layout7.addWidget(label3)
+        self.layout7.addWidget(label4)
+        self.layout7.addWidget(label5)
+
+        self.layout3.addLayout(self.layout4)
+        self.layout3.addLayout(self.layout7)
+        self.layoutRightGroupBox.addLayout(self.layout3)
+        
 #+-----------------------------------------------------------------------------------------------------------------
 #
 # PROJECT 6
