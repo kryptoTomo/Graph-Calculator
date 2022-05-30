@@ -307,6 +307,6 @@ def plot_graph(matrix, layers, filename, flow=None):
     for key, value in l.items():
         labels[(key[0], key[1])] = str(flow[(key[0]-1, key[1]-1)]) + "/" + str(value) if flow!=None else value
 
-    nx.draw_networkx_edge_labels(G, pos, edge_labels=labels, font_size=10, label_pos = 0.15)
+    nx.draw_networkx_edge_labels(G, pos, edge_labels=labels, font_size=10, label_pos = 0.27)
     plt.savefig(f'src/__imgcache__/{filename}')
     plt.close()
