@@ -102,7 +102,7 @@ class Generator:
             if edge[0] not in data['graph'][edge[1]]: 
                 data['graph'][edge[0]].append(edge[1])
                 data['graph'][edge[1]].append(edge[0])
-                data['edges_description'][(edge[0],edge[1])]={'weight': random.randint(0,10),'color': '' ,'directed': False}
+                data['edges_description'][(edge[0],edge[1])]={'weight': random.randint(1,10),'color': '' ,'directed': False}
                 edges_count+=1
                 g.add_edge(edge[0],edge[1])
         while not nx.is_connected(g):

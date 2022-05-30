@@ -157,16 +157,19 @@ def dijkstraWeight(data):
     weight_matrix = []
     for node in data.graph:
         x = []
-        for path in range(1,len(data.graph)+1):
+        for path in range(len(data.graph)):
             if path == node:
                 x.append(0)
-            elif (node - 1, path - 1) in data.edges_description:
-                x.append(data.edges_description[(node-1,path-1)]['weight'])
-            elif (path - 1, node - 1) in data.edges_description:
-                x.append(data.edges_description[(path-1,node-1)]['weight'])
+            elif (node, path) in data.edges_description:
+                x.append(data.edges_description[(node,path)]['weight'])
+            elif (path, node) in data.edges_description:
+                x.append(data.edges_description[(path,node)]['weight'])
             else:
                 x.append(0)
         weight_matrix.append(x)
+    print("graph: ",data.graph)    
+    print("edges: ",data.edges_description)
+    print('weight_matrix: ', weight_matrix)
     return weight_matrix
 
 def dijkstraMinDistance(weights, used):
@@ -182,7 +185,7 @@ def dijkstra(source, data):
             return
         weight_matrix = dijkstraWeight(data)
         currentWeights = [1e10 for _ in range(len(data.graph))]
-        currentWeights[source - 1] = 0
+        currentWeights[source] = 0
         used = [False for _ in range(len(data.graph))]
  
         for _ in range(len(data.graph)):
