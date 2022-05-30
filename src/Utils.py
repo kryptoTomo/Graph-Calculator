@@ -200,7 +200,7 @@ def dijkstra(source, data):
 def dijkstraDist(data = dijkstra_data):
     matrix = []
     for i in range(len(data.graph)):
-        matrix.append(dijkstra(i+1, data))
+        matrix.append(dijkstra(i, data))
     print(matrix)
     return matrix
 
@@ -210,16 +210,18 @@ def graphCenter(data = dijkstra_data):
     l = []
     for m in matrix:
         l.append(sum(m))
-    center = l.index(min(l)) + 1
+    center = l.index(min(l))
     print(center)
+    return center
 
 def miniMaxCenter(data = dijkstra_data):
     matrix = dijkstraDist(data)
     l = []
     for m in matrix:
         l.append(max(m))
-    minimax = l.index(min(l)) + 1
+    minimax = l.index(min(l))
     print(minimax)
+    return minimax
 
 #ex5
 def prim(data = dijkstra_data):
@@ -245,6 +247,7 @@ def prim(data = dijkstra_data):
     print(MST)
     for i in range(1, len_data):
             print (MST[i], "-", i, "\t", weights[i][MST[i]])
+    return MST , weights, len_data
 
 
 #------------------------------------------------------------------------------------------------------------------
