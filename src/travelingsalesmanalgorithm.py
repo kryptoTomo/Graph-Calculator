@@ -39,18 +39,18 @@ def algorith(lista, MAX_IT):
                     lista = np.copy(newLista)
     return lista
 
-lista=read_data_from_file('src/data.dat')
-plt.plot([i[0] for i in lista],[i[1] for i in lista], linestyle='-', marker='o', color='red')
-plt.savefig('src/__imgcache__/traveling_1.png')
-plt.close()
-start_cycle_length=distance(lista)
-start = time.time()
-lista=algorith(lista, 10000) 
-# MAX_IT: 500 000, TIME: 66s DISTANCE: 2072
-# MAX_IT: 1 000 000, TIME: 134s DISTANCE: 2006
-end = time.time()
-print(end - start)
-end_cycle_length=distance(lista)
-plt.plot([i[0] for i in lista],[i[1] for i in lista], linestyle='-', marker='o', color='red')
-plt.savefig('src/__imgcache__/traveling_2.png')
-plt.close()
+# lista=read_data_from_file('src/data.dat')
+# plt.plot([i[0] for i in lista],[i[1] for i in lista], linestyle='-', marker='o', color='red')
+# plt.savefig('src/__imgcache__/traveling_1.png')
+# plt.close()
+# start_cycle_length=distance(lista)
+# start = time.time()
+# lista=algorith(lista, 10000) 
+# # MAX_IT: 500 000, TIME: 66s DISTANCE: 2072
+# # MAX_IT: 1 000 000, TIME: 134s DISTANCE: 2006
+# end = time.time()
+# print(end - start)
+# end_cycle_length=distance(lista)
+# plt.plot([i[0] for i in lista],[i[1] for i in lista], linestyle='-', marker='o', color='red')
+# plt.savefig('src/__imgcache__/traveling_2.png')
+# plt.close()

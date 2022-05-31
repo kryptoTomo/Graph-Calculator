@@ -139,9 +139,9 @@ class MainWindow(QDialog):
                     self.layout6.itemAt(i).widget().setParent(None)
                 except:pass
         if self.layout8:
-            for i in reversed(range(self.layout6.count())):
+            for i in reversed(range(self.layout8.count())):
                 try:
-                    self.layout6.itemAt(i).widget().setParent(None)
+                    self.layout8.itemAt(i).widget().setParent(None)
                 except:pass
         for i in reversed(range(self.layoutRightGroupBox.count())):
             try:
@@ -849,9 +849,13 @@ class MainWindow(QDialog):
         self.page_rank_vector_iteration_button.clicked.connect(self.on_page_rank_vector_iteration)
         #2
         self.traveling_salesman_algorithm_button = QPushButton('Traveling salesman algorithm',self)
+        self.traveling_salesman_algorithm_spin = QSpinBox()
+        self.traveling_salesman_algorithm_spin.setMaximum(2000000)
+        self.traveling_salesman_algorithm_spin.setValue(1000)
 
         self.layout0 = QHBoxLayout()
         self.layout0.addWidget(self.traveling_salesman_algorithm_button)
+        self.layout0.addWidget(self.traveling_salesman_algorithm_spin)
         self.traveling_salesman_algorithm_button.clicked.connect(self.on_traveling_salesman_algorithm)
 
         self.layoutLeftGroupBox.addLayout(self.layout1)
@@ -883,6 +887,22 @@ class MainWindow(QDialog):
         self.layoutRightGroupBox.addLayout(self.layout3)
 
     def on_traveling_salesman_algorithm(self):
+        lista=read_data_from_file('src/data.dat')
+        plt.plot([i[0] for i in lista],[i[1] for i in lista], linestyle='-', marker='o', color='red')
+        plt.savefig('src/__imgcache__/traveling_1.png')
+        plt.close()
+        start_cycle_length=distance(lista)
+        start = time.time()
+        lista=algorith(lista, self.traveling_salesman_algorithm_spin.value()) 
+        # MAX_IT: 500 000, TIME: 66s DISTANCE: 2072
+        # MAX_IT: 1 000 000, TIME: 134s DISTANCE: 2006
+        end = time.time()
+        print(end - start)
+        end_cycle_length=distance(lista)
+        plt.plot([i[0] for i in lista],[i[1] for i in lista], linestyle='-', marker='o', color='red')
+        plt.savefig('src/__imgcache__/traveling_2.png')
+        plt.close()
+
         self.clear_right_layout()
         self.layout3=QHBoxLayout()
 
@@ -909,9 +929,3 @@ class MainWindow(QDialog):
         self.layout3.addLayout(self.layout4)
         self.layout3.addLayout(self.layout7)
         self.layoutRightGroupBox.addLayout(self.layout3)
-        Generator.random_undirected_consistent_graph(self.random_undirected_consistent_graph_spin1_n.value()).graphVisualization()
-        label = QLabel(self)
-        pixmap = QPixmap('src/__imgcache__/randomUndirectedConsistentGraph.png')
-        label.setPixmap(pixmap)
-        self.labelImage=QLabel()
-        self.layoutRightGroupBox.addWidget(label)
