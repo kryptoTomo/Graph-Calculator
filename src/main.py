@@ -1,5 +1,7 @@
 import os
-os.mkdir('src/__imgcache__')
+try:
+    os.mkdir('src/__imgcache__')
+except: pass
 import sys
 from MainWindow import MainWindow
 from PyQt5.QtWidgets import QApplication
