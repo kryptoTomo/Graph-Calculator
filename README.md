@@ -4,8 +4,9 @@ Project for a Graphs and Their Uses course/AGH WFiIS IS SEMESTER(VI)
 
 INFORMATION
 -----------
-To start the Graph-Calculator, first make few steps:
-* Python installation with libraries: PyQt5, igraph
+To start the Graph-Calculator, first Install Requirements: 
+
+        pip install -r requirements.txt
 
 Graph-Calculator
 -----------------------

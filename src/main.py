@@ -1,3 +1,5 @@
+import os
+os.mkdir('src/__imgcache__')
 import sys
 from MainWindow import MainWindow
 from PyQt5.QtWidgets import QApplication
