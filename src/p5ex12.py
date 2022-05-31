@@ -142,7 +142,7 @@ def cap_residual(u, v, G, c, f):    # residual 'bandwidth' between u-> v
         return f[(v, u)]
     return 0
 
-def Ford_Fulkerson_Ziom(G):
+def Ford_Fulkerson(G):
     if G is None:
         return None, None
     # G -> adj matrix

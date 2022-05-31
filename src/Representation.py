@@ -29,6 +29,37 @@ example_data={'name': 'Rysunek.png',
         }  
 }
 
+dijkstra_data={'name': 'Rysunek.png',
+              'size': (6,6),
+              'directed_all': True,
+              'node_size': 500,
+              'graph':{1:  [2,3,5], 
+                       2:  [1,3,4], 
+                       3:  [1,2], 
+                       4:  [2,5], 
+                       5:  [1,4], 
+               },
+               'nodes_description':{1: {'color': '#%02X%02X%02X' % (random.randint(0,255),random.randint(0,255),random.randint(0,255))},
+                                    2: {'color': '#%02X%02X%02X' % (random.randint(0,255),random.randint(0,255),random.randint(0,255))},
+                                    3: {'color': '#%02X%02X%02X' % (random.randint(0,255),random.randint(0,255),random.randint(0,255))},
+                                    4: {'color': '#%02X%02X%02X' % (random.randint(0,255),random.randint(0,255),random.randint(0,255))},
+                                    5: {'color': '#%02X%02X%02X' % (random.randint(0,255),random.randint(0,255),random.randint(0,255))},
+                                    6: {'color': '#%02X%02X%02X' % (random.randint(0,255),random.randint(0,255),random.randint(0,255))},
+                                    7: {'color': '#%02X%02X%02X' % (random.randint(0,255),random.randint(0,255),random.randint(0,255))},
+                                    8: {'color': '#%02X%02X%02X' % (random.randint(0,255),random.randint(0,255),random.randint(0,255))},
+                                    9: {'color': '#%02X%02X%02X' % (random.randint(0,255),random.randint(0,255),random.randint(0,255))},
+                                    10: {'color': '#%02X%02X%02X' % (random.randint(0,255),random.randint(0,255),random.randint(0,255))},
+                                    11: {'color': '#%02X%02X%02X' % (random.randint(0,255),random.randint(0,255),random.randint(0,255))}
+        },
+        'edges_description': {(0,1):  {'weight': 1,'color': '#%02X%02X%02X' % (random.randint(0,255),random.randint (0,255),random.randint(0,255)) ,'directed': random.sample([True,False],1)} ,
+                            (0, 2):  {'weight': 2,'color': '#%02X%02X%02X' % (random.randint(0,255),random.randint(0,255),random.randint(0,255)) ,'directed': random.sample([True,False],1)} ,
+                            (0, 4):  {'weight': 3,'color': '#%02X%02X%02X' % (random.randint(0,255),random.randint(0,255),random.randint(0,255)) ,'directed': random.sample([True,False],1)} ,
+                            (1, 2):  {'weight': 4,'color': '#%02X%02X%02X' % (random.randint(0,255),random.randint(0,255),random.randint(0,255)) ,'directed': random.sample([True,False],1)},
+                            (1, 3):  {'weight': 5,'color': '#%02X%02X%02X' % (random.randint(0,255),random.randint(0,255),random.randint(0,255)) ,'directed': random.sample([True,False],1)},
+                            (3, 4):  {'weight': 6,'color': '#%02X%02X%02X' % (random.randint(0,255),random.randint(0,255),random.randint(0,255)) ,'directed': random.sample([True,False],1)}                       
+        }  
+}
+
 class GraphRepresentation:
     def __init__(self, data):
         self.graph=data['graph']

@@ -8,7 +8,8 @@ import ast
 
 from Generator import *
 from Representation import AdjacencyMatrix, IncidentMatrix
-from Utils import components, valid_graph, cons_graph, random_k_regular, find_Hamiltion_cycle, randomizeGraph, plot_graph
+from Utils import components, valid_graph, cons_graph, random_k_regular, find_Hamiltion_cycle,prim,\
+                    randomizeGraph, plot_graph,dijkstra,dijkstraDist, graphCenter,miniMaxCenter
 from EulerGraph import EulerGraph
 from Kosaraju import *
 from ShortPaths import *
@@ -32,6 +33,8 @@ class MainWindow(QDialog):
         self.layout5=None
         self.layout6=None
         self.layout7=None
+        self.layout8=None
+        self.graph_3=None
         #connect functionality with methods
         self.setupQtConnections()
         #set geometry
@@ -131,6 +134,11 @@ class MainWindow(QDialog):
                     self.layout5.itemAt(i).widget().setParent(None)
                 except:pass
         if self.layout6:
+            for i in reversed(range(self.layout6.count())):
+                try:
+                    self.layout6.itemAt(i).widget().setParent(None)
+                except:pass
+        if self.layout8:
             for i in reversed(range(self.layout6.count())):
                 try:
                     self.layout6.itemAt(i).widget().setParent(None)
@@ -517,22 +525,97 @@ class MainWindow(QDialog):
         #-------------------------
         self.random_undirected_consistent_graph_button = QPushButton('Random undirected consistent graph',self)
         self.random_undirected_consistent_graph_spin1_n = QSpinBox()
-        self.random_undirected_consistent_graph_spin1_n.setValue(10)
+        self.random_undirected_consistent_graph_spin1_n.setValue(6)
 
-        self.layout0 = QHBoxLayout()
-        self.layout0.addWidget(self.random_undirected_consistent_graph_button)
-        self.layout0.addWidget(self.random_undirected_consistent_graph_spin1_n)
+        self.layout1 = QHBoxLayout()
+        self.layout1.addWidget(self.random_undirected_consistent_graph_button)
+        self.layout1.addWidget(self.random_undirected_consistent_graph_spin1_n)
         self.random_undirected_consistent_graph_button.clicked.connect(self.on_random_undirected_consistent_graph)
+                
+        self.random_s03e02_button = QPushButton('Algortih Dijkstra For \nRandom undirected consistent graph',self)
+        self.random_s03e02_spin2_n = QSpinBox()
+        self.random_s03e02_spin2_n.setValue(0)
 
+        self.layout2 = QHBoxLayout()
+        self.layout2.addWidget(self.random_s03e02_button)
+        self.layout2.addWidget(self.random_s03e02_spin2_n)
+        self.random_s03e02_button.clicked.connect(self.on_s03e02_graph)
+
+        self.random_s03e03_button = QPushButton('Adjacency Matrix',self)
+
+        self.layout5 = QHBoxLayout()
+        self.layout5.addWidget(self.random_s03e03_button)
+        self.random_s03e03_button.clicked.connect(self.on_s03e03_graph)
+
+        self.random_s03e04_button = QPushButton('Center/Minimax Center',self)
+
+        self.layout6 = QHBoxLayout()
+        self.layout6.addWidget(self.random_s03e04_button)
+        self.random_s03e04_button.clicked.connect(self.on_s03e04_graph)
+
+        self.random_s03e05_button = QPushButton('Minimal spanning tree',self)
+
+        self.layout8 = QHBoxLayout()
+        self.layout8.addWidget(self.random_s03e05_button)
+        self.random_s03e05_button.clicked.connect(self.on_s03e05_graph)
+
+        self.layout0=QVBoxLayout()
+        self.layout0.addLayout(self.layout1)
+        self.layout0.addLayout(self.layout2)
+        self.layout0.addLayout(self.layout5)
+        self.layout0.addLayout(self.layout6)
+        self.layout0.addLayout(self.layout8)
         self.layoutLeftGroupBox.addLayout(self.layout0)
 
     def on_random_undirected_consistent_graph(self):
         self.clear_right_layout()
-        Generator.rand_undirected_consistent_graph(self.random_undirected_consistent_graph_spin1_n.value()).graphVisualization()
+        self.graph_3=Generator.rand_undirected_consistent_graph(self.random_undirected_consistent_graph_spin1_n.value()).toAdjacencyList()
+        self.graph_3.graphVisualization()
         label = QLabel(self)
         pixmap = QPixmap('src/__imgcache__/randomUndirectedConsistentGraph.png')
         label.setPixmap(pixmap)
         self.layoutRightGroupBox.addWidget(label)
+
+    def on_s03e02_graph(self):
+        self.clear_right_layout()
+
+        label = QLabel(self)
+        pixmap = QPixmap('src/__imgcache__/randomUndirectedConsistentGraph.png')
+        label.setPixmap(pixmap)
+        label_result=QLabel(str(dijkstra(self.random_s03e02_spin2_n.value(),self.graph_3)))
+        self.layoutRightGroupBox.addWidget(label)
+        self.layoutRightGroupBox.addWidget(label_result)
+
+    def on_s03e03_graph(self):
+        self.clear_right_layout()
+
+        label = QLabel(self)
+        pixmap = QPixmap('src/__imgcache__/randomUndirectedConsistentGraph.png')
+        label.setPixmap(pixmap)
+        label_result=QLabel("\n".join(str(i) for i in dijkstraDist(self.graph_3)))
+        self.layoutRightGroupBox.addWidget(label)
+        self.layoutRightGroupBox.addWidget(label_result)
+
+    def on_s03e04_graph(self):
+        self.clear_right_layout()
+
+        label = QLabel(self)
+        pixmap = QPixmap('src/__imgcache__/randomUndirectedConsistentGraph.png')
+        label.setPixmap(pixmap)
+        label_result=QLabel(f'Center: {graphCenter(self.graph_3)}\nMinimax Center: {miniMaxCenter(self.graph_3)}')
+        self.layoutRightGroupBox.addWidget(label)
+        self.layoutRightGroupBox.addWidget(label_result)
+
+    def on_s03e05_graph(self):
+        self.clear_right_layout()
+
+        label = QLabel(self)
+        pixmap = QPixmap('src/__imgcache__/randomUndirectedConsistentGraph.png')
+        label.setPixmap(pixmap)
+        MST , weights, len_data = prim(self.graph_3)
+        label_result=QLabel(f'Minimal spanning tree:\n'+'\n'.join(f'{MST[i]} - {i}    {weights[i][MST[i]]}' for i in range(1, len_data)))
+        self.layoutRightGroupBox.addWidget(label)
+        self.layoutRightGroupBox.addWidget(label_result)
 
 #+-----------------------------------------------------------------------------------------------------------------
 #
@@ -712,7 +795,7 @@ class MainWindow(QDialog):
         self.layout4.addWidget(label1)
         self.layout4.addWidget(label2)
         
-        f, fmax = Ford_Fulkerson_Ziom(g)
+        f, fmax = Ford_Fulkerson(g)
         Utils.plot_graph(g, layers, filename='ford_fulkerson_algorithm', flow=f)
         self.layout7=QVBoxLayout()     
         label3 = QLabel("Ford-Fulkerson algorithm")
@@ -826,3 +909,9 @@ class MainWindow(QDialog):
         self.layout3.addLayout(self.layout4)
         self.layout3.addLayout(self.layout7)
         self.layoutRightGroupBox.addLayout(self.layout3)
+        Generator.random_undirected_consistent_graph(self.random_undirected_consistent_graph_spin1_n.value()).graphVisualization()
+        label = QLabel(self)
+        pixmap = QPixmap('src/__imgcache__/randomUndirectedConsistentGraph.png')
+        label.setPixmap(pixmap)
+        self.labelImage=QLabel()
+        self.layoutRightGroupBox.addWidget(label)
